@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", function(event) { 
-    const element = document.getElementById("modal");
-    const closeModal = function() {
-      element.classList.remove("track-message", "backdrop");
-    };
-    element.addEventListener('click', closeModal, false); 
-  });
+  const modalElement = document.getElementById("modalPlugin");
+  const closeModal = function() {
+    modalElement.classList.add("ModalClosed");
+  };
+  modalElement.addEventListener('click', closeModal, false);
+
+});
