@@ -1,8 +1,11 @@
 document.addEventListener("DOMContentLoaded", function(event) { 
-  const modalElement = document.getElementById("modalPlugin");
-  const closeModal = function() {
-    modalElement.classList.add("ModalClosed");
-  };
-  modalElement.addEventListener('click', closeModal, false);
-
-});
+      const element = document.getElementById("modal");
+      const close = document.getElementById("close");
+      const closeModal = function() {
+        element.classList.add("ModalClosed");
+      };
+      close.addEventListener('click', closeModal, false); 
+    });
+    
+    
+    
