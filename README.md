@@ -6,6 +6,7 @@ WP plugin for a customizable track message.
 ## TODO list
 
 - [X] Show the message
-- [ ] Verify if the user is on the page for the first time
-- [ ] Customize the color and text of the message
+- [X] Verify if the user is on the page for the first time
+- [X] Customize the text of the message
+- [ ] Customize the color of the message
 - [ ] Multi-language
