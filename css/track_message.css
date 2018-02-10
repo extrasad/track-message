@@ -64,7 +64,6 @@
           cursor: pointer;
           background-color: #5cb85c; }
 
-/* Add Animation */
 @keyframes openModal {
   0% {
     opacity: 0;
