@@ -1,11 +1,88 @@
 <?php
-class settings_page{
+class SettingsPage{
+
+    function myScripts(){
+        $url_plugin_js  =   plugins_url('track-message/js/');
+        wp_register_script('tmssg_color_js', $url_plugin_js . 'jquery.custom.js'. array( 'jquery', 'wp-color-picker' ), '', true  );   
+        wp_enqueue_style( 'wp-color-picker' );
+        wp_enqueue_script('tmssg_color_js');
     
+    }
+
+    // Construct
+    public function __construct(){
+        // Add the options page and menu item
+        add_action( 'admin_menu', array( $this, 'tmssgPluginMenu' ));
+        add_action( 'admin_init', array( $this, 'mssgSections' ) );
+        add_action( 'admin_init', array( $this, 'mssgFields' ) );
+        add_action('admin_init', array($this, 'registerSettings' ));
+        add_action( 'wp_enqueue_scripts', 'myScripts' );
+        // Add the options page and menu item
+        add_action( 'admin_menu', array( $this, 'tmssgPluginMenu' ));
+        
+        // Adds all of the options for the administrative settings
+        add_action( 'admin_init', array( $this, 'tmssgOptionsInit' ));
+        
+        // Get registered option
+        $this->options = get_option( 'tmssg_settings_options' );
+
+    }
+
+    // Custom Message Section
+    public function tmssgPluginMenu() {
+        add_submenu_page(   'options-general.php', 
+                            'Track Message Settings', 
+                            'Track Message', 
+                            'manage_options', 
+                            'track_message', 
+                            array( $this, 'tmssgPluginContent'));
+    }
+
+    public function tmssgPluginContent() {
+            ?>
+        <div class="wrap">
+        <h2>Track Message</h2>
+        <form method="post" action="options.php">
+            <?php
+                settings_fields('track_message');
+                do_settings_sections('track_message');
+                submit_button();
+            ?>
+        </form>
+        </div> <?php
+        }
+
+    public function mssgSections() {
+        add_settings_section( 'message_section', '¡Agregue un mensaje para avisar a sus visitantes!', false, 'track_message' );
+    }
+
+    public function mssgFields() {
+        add_settings_field( 'message_field', 'Escriba el mensaje', array( $this, 'mssgFieldCallback' ), 'track_message', 'message_section' );
+        add_settings_field( 'show_mssg_field', 'Mensaje actual', array( $this, 'showMssgFieldCallback' ), 'track_message', 'message_section' );
+    }
+
+    public function mssgFieldCallback($args) {
+        $html = sprintf('<input name="message_field" id="message_filed)');
+        $html.= sprintf('type="text"/>');
+        echo $html;
+    }
+    public function showMssgFieldCallback($args){
+        $html = sprintf('<div style ="width:500px;height:100px;border:1px solid #000;">');
+        $html.= sprintf('<p>' . get_option( 'message_field' ) . '</p>');
+        $html.= sprintf('</div>');
+        echo $html;
+    }
+    public function registerSettings(){
+        register_setting( 'track_message', 'message_field' );
+        register_setting('track_message', 'show_mssg_field');
+    }
+
+    // Color Picker Section
     private static $instance = null;
     
     public $options;
     
-    public static function get_instance() {
+    public static function getIntance() {
   
         if ( null == self::$instance ) {
             self::$instance = new self;
@@ -15,34 +92,17 @@ class settings_page{
   
     }    
 
-    public function __construct(){
-        // Add the options page and menu item
-        add_action( 'admin_menu', array( $this, 'tmssg_plugin_menu' ));
-        
-        // Adds all of the options for the administrative settings
-        add_action( 'admin_init', array( $this, 'tmssg_options_init' ));
-
-        // Color Picker
-        wp_enqueue_style( 'wp-color-picker' );
-
-        // Register javascript
-        add_action('admin_enqueue_scripts', array( $this, 'enqueue_admin_js' ) );
-
-        // Get registered option
-        $this->options = get_option( 'tmssg_settings_options' );
-    }
-
-    public function tmssg_plugin_menu() {
+    public function tmssgPlugin() {
         add_options_page(
             'Track Message Options',
             'Track Message',
             'administrator',
             basename(__FILE__),
-            array( $this, 'tmssg_plugin_settings')
+            array( $this, 'tmssgPluginSettings')
         );
     }
 
-    public function tmssg_plugin_settings() {
+    public function tmssgPluginSettings() {
         if ( !current_user_can( 'administrator' ) )  {
             wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
         }?>
@@ -59,7 +119,7 @@ class settings_page{
     </div> <!-- /wrap -->
     <?php  
     }
-    public function tmssg_options_init() { 
+    public function tmssgOptionsInit() { 
      
         // Add Section for option fields
         add_settings_section( 'tmssg_section', 'Track Message Options', array( $this, 'displaySection' ), __FILE__ ); // id, title, display cb, page
@@ -134,10 +194,5 @@ class settings_page{
 
     public function displaySection() { /* Leave blank */ } 
      
-    //Function that will add javascript file for Color Piker.
-    public function enqueue_admin_js() { 
-     
-    // Add the wp-color-picker dependecy to js file
-    wp_enqueue_script( 'tmssg_custom_js', plugins_url( 'jquery.custom.js', __FILE__ ), array( 'jquery', 'wp-color-picker' ), '', true  );
-    }
+
 }   
