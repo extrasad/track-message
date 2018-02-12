@@ -1,88 +1,63 @@
-/* The Modal (background) */
-.TrackMessageModal__content--openmodal {
-  animation: openModal 0.4s ease-out forwards; }
+.TrackMessageNotification__content--opennotification {
+  animation: openModal 0.5s ease-out forwards; }
 
-.TrackMessageModal__content--closemodal {
+.TrackMessageNotification__content--closenotification {
   animation: closeModal 1s ease-out forwards; }
 
-.TrackMessageModal {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  z-index: 100;
+.TrackMessageNotification {
+  background: #2db34a;
+  bottom: 0;
   left: 0;
-  top: 0;
-  background-color: rgba(0, 0, 0, 0.5); }
-  .TrackMessageModal .TrackMessageModal__content {
-    position: fixed;
-    z-index: 200;
-    box-shadow: 0 2px 2px #ccc;
-    background-color: #fff;
-    text-align: center;
+  border-top: 4px solid #fffc00;
+  padding: 20px 0;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  z-index: 500;
+  box-sizing: border-box;
+  box-shadow: 0 -1px 4px black; }
+  .TrackMessageNotification p {
+    display: inline;
+    padding-right: 0.5em; }
+  .TrackMessageNotification .TrackMessageCookieNotification__inline--btn {
+    display: inline;
+    border-radius: 2px;
     box-sizing: border-box;
-    top: 20%;
-    left: 20%;
-    width: 60%;
-    transition: all 0.3s ease-out; }
-    .TrackMessageModal .TrackMessageModal__content .TrackMessageModal__content--header {
-      padding: 2px 16px;
-      background-color: #5cb85c;
-      color: #fff;
-      line-height: 2em; }
-    .TrackMessageModal .TrackMessageModal__content .TrackMessageModal__content--body {
-      padding: 2px 16px;
-      font-size: 22px;
-      line-height: 4em; }
-      .TrackMessageModal .TrackMessageModal__content .TrackMessageModal__content--body p {
-        width: 90%;
-        margin: auto auto; }
-    .TrackMessageModal .TrackMessageModal__content .TrackMessageModal__content--footer {
-      padding: 2px 16px;
-      background-color: #5cb85c;
+    background: #fff;
+    color: #000;
+    padding: 0.4em;
+    font-size: 13px;
+    cursor: pointer;
+    transition-duration: .3s; }
+    .TrackMessageNotification .TrackMessageCookieNotification__inline--btn:hover {
+      background-color: #000;
       color: #fff; }
-      .TrackMessageModal .TrackMessageModal__content .TrackMessageModal__content--footer .TrackMessageModal__content--footer-close {
-        padding: 2px 16px;
-        background-color: #fff;
-        border-radius: 2px;
-        border-style: none;
-        display: inline-block;
-        cursor: pointer;
-        color: #5cb85c;
-        font-family: Arial;
-        font-size: 20px;
-        text-decoration: none;
-        transition-duration: .6s;
-        line-height: 2em; }
-        .TrackMessageModal .TrackMessageModal__content .TrackMessageModal__content--footer .TrackMessageModal__content--footer-close:focus {
-          color: #000;
-          text-decoration: none;
-          cursor: pointer;
-          background-color: #5cb85c; }
-        .TrackMessageModal .TrackMessageModal__content .TrackMessageModal__content--footer .TrackMessageModal__content--footer-close:hover {
-          color: #000;
-          text-decoration: none;
-          cursor: pointer;
-          background-color: #5cb85c; }
 
 @keyframes openModal {
   0% {
-    opacity: 0;
-    transform: translateY(-100%); }
+    opacity: 0.4;
+    transform: translateY(100%); }
+  25% {
+    opacity: 0.5;
+    transform: translateY(60%); }
   50% {
-    opacity: 1;
-    transform: translateY(90%); }
+    opacity: 0.7;
+    transform: translateY(30%); }
+  75% {
+    opacity: 0.9;
+    transform: translateY(10%); }
   100% {
     opacity: 1;
-    transform: translateY(0); } }
+    transform: translateY(0%); } }
 @keyframes closeModal {
   0% {
     opacity: 1;
-    transform: translateY(0); }
+    transform: translateY(0%); }
   50% {
     opacity: 0.8;
-    transform: translateY(60%); }
+    transform: translateY(90%); }
   100% {
     opacity: 0;
-    transform: translateY(-100%); } }
+    transform: translateY(100%); } }
 
 /*# sourceMappingURL=track_message.css.map */
