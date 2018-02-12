@@ -18,20 +18,11 @@ class TrackMessage{
     }
     
     public static function tmssgShowMessage(){
-      $message = get_option('message_field');
-      $html= sprintf("<div id='Modal__TrackMessageModal_Id--3455' class='TrackMessageModal'>");
-      $html.= sprintf("<div class='TrackMessageModal__content TrackMessageModal__content--openmodal'>");
-      $html.= sprintf("<div class='TrackMessageModal__content--header'>");
-      $html.= sprintf("<h2>AVISO</h2>");
-      $html.= sprintf("</div>");
-      $html.= sprintf("<div class='TrackMessageModal__content--body'>");
-      $html.= sprintf("<p>$message</p>");
-      $html.= sprintf("</div>");
-      $html.= sprintf("<div class='TrackMessageModal__content--footer'>");
-      $html.= sprintf("<button type='button' class='TrackMessageModal__content--footer-close' id='Modal_TrackMessageModal_Id--close-5644'> Estoy de acuerdo con esto</button>");
-      $html.= sprintf("</div>");
-      $html.= sprintf("</div>");
-      $html.= sprintf("</div>");
-      echo $html;
+        $message = get_option('message_field');
+        $html= sprintf("<div id='TrackMessageCookieNotification_Id--3455' class='TrackMessageNotification TrackMessageNotification__content--opennotification'>");
+        $html.= sprintf("<p>$message</p>");
+        $html.= sprintf("<span id='TrackMessageCookieNotification_Id--close-5644' class='TrackMessageCookieNotification__inline--btn'>Aceptar</span>");
+        $html.= sprintf("</div>");
+        echo $html;
     }
 }
