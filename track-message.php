@@ -6,6 +6,8 @@
 Plugin Name: Track Message
 Description: WP plugin for a customizable track message.
 Version: 1.0
+Text Domain: track-message
+Domain Path: /languages/
 
 */
 // Security check
@@ -37,16 +39,14 @@ class TrackMessage{
         $url_plugin_js  =   plugins_url('track-message/js/');
         $url_plugin_css  =   plugins_url('track-message/css/');
       
-        wp_register_script('tmssg_js', $url_plugin_js . 'track_message.js');   
+        wp_register_script('tmssg_js', $url_plugin_js . 'track_message.js');
+        wp_register_script('tmssg_custom_js', $url_plugin_js . 'settings.js');   
         wp_register_style( 'tmssg_css', $url_plugin_css . 'track_message.css');
         wp_enqueue_style('tmssg_css');
         wp_enqueue_script('tmssg_js');
-        
+        wp_enqueue_script('tmssg_custom_js');        
         wp_enqueue_style( 'wp-color-picker' );
         wp_enqueue_script( 'wp-color-picker' );
-        
-        //Load our custom Javascript file
-        wp_enqueue_script( 'track_message', plugin_dir_url(__FILE__) . 'js/settings.js' );
       
     }
   
@@ -57,7 +57,7 @@ class TrackMessage{
     // Custom Message Section
     public function tmssgPluginMenu() {
         $settings = add_submenu_page(   'options-general.php', 
-                        __('Track Message Settings', 'track-message'), 
+                        __('Options', 'track-message'), 
                         __('Track Message', 'track-message'),
                             'manage_options', 
                             'track_message', 
@@ -91,14 +91,14 @@ class TrackMessage{
           
         add_settings_section(
             'wp-color-picker-section',
-            __( 'Choose Your Color' ),
+            __( 'Choose Your Color'.'track-message' ),
             array( $this, 'optionsSettingsText' ),
             'track_message'
         );
           
         add_settings_field(
             'color',
-            __( 'Color' ),
+            __( 'Text color', 'track-message'  ),
             array( $this, 'colorInput' ),
             'track_message',
             'wp-color-picker-section'
@@ -112,14 +112,14 @@ class TrackMessage{
           
         add_settings_section(
             'wp-color-picker-section',
-            __( 'Choose Your Color' ),
+            __( 'Choose Your Color', 'track-message'  ),
             array( $this, 'optionsSettingsText' ),
             'track_message'
         );
           
         add_settings_field(
             'background_color',
-            __( 'Background Color' ),
+            __( 'Background Color', 'track-message'  ),
             array( $this, 'backgroundColorInput' ),
             'track_message',
             'wp-color-picker-section'
@@ -129,11 +129,11 @@ class TrackMessage{
     }
     
     public function mssgSections() {
-        add_settings_section( 'message_section', __('¡Agregue un mensaje para avisar a sus visitantes!','track-message'), false, 'track_message' );
+        add_settings_section( 'message_section', __('¡Add a message to notify your visitors!','track-message'), false, 'track_message' );
     }
     
     public function mssgFields() {
-        add_settings_field( 'message_field', __('Escriba el mensaje', 'track-message'), array( $this, 'mssgFieldCallback' ), 'track_message', 'message_section' );
+        add_settings_field( 'message_field', __('Write the message', 'track-message'), array( $this, 'mssgFieldCallback' ), 'track_message', 'message_section' );
     }
     
     public function mssgFieldCallback() {
@@ -148,7 +148,7 @@ class TrackMessage{
     }
     
     public function optionsSettingsText(){
-        echo '<p>' . __( 'Use the color picker below to choose your color.' ) . '</p>';
+        echo '<p>' . _e( 'Use the color picker below to choose your color.', 'track-message'  ) . '</p>';
       }
       
       /**
