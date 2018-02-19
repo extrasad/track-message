@@ -41,7 +41,8 @@ class TrackMessage{
     }
 
     public function customSettingsLink($links) {
-        $settings_link = '<a href="options-general.php?page=track_message">' . __( 'Settings' ) . '</a>';
+        $link = esc_url(admin_url('/options-general.php?page=track_message')); 
+        $settings_link = sprintf('<a href="%s">' . __( 'Settings', 'track-message' ) . '</a>', $link);
         array_push($links, $settings_link);
           return $links;
     }
