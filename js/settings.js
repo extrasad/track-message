@@ -1,3 +1,3 @@
 jQuery(document).ready(function($){
-  $('.color').wpColorPicker();
+  $('.TrackMessageNotification__content--edit-color').wpColorPicker();
 });

@@ -171,7 +171,7 @@ class TrackMessage{
         $color = ( $options['color'] != "" ) ? sanitize_text_field( $options['color'] ) : '#3D9B0C';
         
         
-        $html = sprintf('<input class="color" name="color_options[color]" type="text" value="'. $color .'" />');
+        $html = sprintf('<input class="TrackMessageNotification__content--edit-color" name="color_options[color]" type="text" value="'. $color .'" />');
         echo $html;
     }
 
@@ -187,7 +187,7 @@ class TrackMessage{
         $color = ( $options['background_color'] != "" ) ? sanitize_text_field( $options['background_color'] ) : '#3D9B0C';
         
         
-        $html = sprintf('<input class="color" name="background_color_options[background_color]" type="text" value="'. $color .'" />');
+        $html = sprintf('<input class="TrackMessageNotification__content--edit-color" name="background_color_options[background_color]" type="text" value="'. $color .'" />');
         echo $html;
     }
 
