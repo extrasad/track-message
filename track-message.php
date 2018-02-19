@@ -100,7 +100,11 @@ class TrackMessage{
         add_settings_section( 'message_section', __('¡Add a message to notify your visitors!','track-message'), false, 'track_message' );
         
         //Position - Design
+        register_setting('track_message', 'position_options');
 
+        add_settings_field('position_options', __('Where do you want your message to show up?', 'track-message'), array( $this,'positionOptionsCallback'), 'track_message', 'position_section');
+
+        add_settings_section('position_section', __('Position styles'.'track-message'), false, 'track_message');
         
         //Color Picker - Design
         register_setting(
@@ -143,8 +147,16 @@ class TrackMessage{
     
     public function mssgFieldCallback() {
         $message = esc_html(get_option('message_field'));
-        $html = sprintf('<textarea name="message_field" id="message_filed" placeholder="%s"', $message);
+        $html = sprintf('<textarea name="message_field" id="message_field" placeholder="%s"', $message);
         $html.= ('type="text"></textarea>');
+        echo $html;
+    }
+
+    public function positionOptionsCallback(){
+        $html = sprintf('<select name="position_options">');
+        $html .= sprintf('<option value="top">Top</option>');
+        $html .= sprintf('<option value="bottom">Bottom</option>');
+        $html .= sprintf('</select>');
         echo $html;
     }
 
