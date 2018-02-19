@@ -148,7 +148,9 @@ class TrackMessage{
     public function mssgFieldCallback() {
         $message = esc_html(get_option('message_field'));
         $html = sprintf('<textarea name="message_field" id="message_field" placeholder="%s"', $message);
-        $html.= ('type="text"></textarea>');
+        $html.= ('type="text" style="width: 70%;"></textarea>');
+
+
         echo $html;
     }
 
