@@ -27,9 +27,6 @@ class TrackMessage{
         add_action( 'wp_enqueue_scripts', array( $this, 'myScripts'));
         add_action('plugins_loaded', array($this,'multilanguage'));
         add_action( 'admin_menu', array( $this, 'tmssgPluginMenu'));
-        add_action( 'admin_init', array( $this, 'mssgSections'));
-        add_action( 'admin_init', array( $this, 'mssgFields'));
-        add_action('admin_init', array($this, 'registerSettings'));
         add_action( 'admin_init', array( $this, 'settingsInit' ) );
         add_filter( "plugin_action_links_$plugin", array($this, 'customSettingsLink' ));
 
@@ -95,6 +92,21 @@ class TrackMessage{
     
 
     public function settingsInit(){
+        //Text message
+        register_setting( 'track_message', 'message_field' );
+        
+        add_settings_field( 'message_field', __('Write the message', 'track-message'), array( $this, 'mssgFieldCallback' ), 'track_message', 'message_section' );
+
+        add_settings_section( 'message_section', __('¡Add a message to notify your visitors!','track-message'), false, 'track_message' );
+        
+        //Position - Design
+        register_setting('track_message', 'position_options');
+
+        add_settings_field('position_options', __('Where do you want your message to show up?', 'track-message'), array( $this,'positionOptionsCallback'), 'track_message', 'position_section');
+
+        add_settings_section('position_section', __('Position styles'.'track-message'), false, 'track_message');
+        
+        //Color Picker - Design
         register_setting(
             'track_message',
             'color_options',
@@ -122,13 +134,6 @@ class TrackMessage{
             array( $this, 'validateBackgroundOptions' )
         );
           
-        add_settings_section(
-            'wp-color-picker-section',
-            __( 'Choose Your Color', 'track-message'  ),
-            array( $this, 'optionsSettingsText' ),
-            'track_message'
-        );
-          
         add_settings_field(
             'background_color',
             __( 'Background Color', 'track-message'  ),
@@ -140,24 +145,21 @@ class TrackMessage{
         
     }
     
-    public function mssgSections() {
-        add_settings_section( 'message_section', __('¡Add a message to notify your visitors!','track-message'), false, 'track_message' );
-    }
-    
-    public function mssgFields() {
-        add_settings_field( 'message_field', __('Write the message', 'track-message'), array( $this, 'mssgFieldCallback' ), 'track_message', 'message_section' );
-    }
-    
     public function mssgFieldCallback() {
         $message = esc_html(get_option('message_field'));
-        $html = sprintf('<textarea name="message_field" id="message_filed" placeholder="%s"', $message);
+        $html = sprintf('<textarea name="message_field" id="message_field" placeholder="%s"', $message);
         $html.= ('type="text"></textarea>');
         echo $html;
     }
-    public function registerSettings(){
-        register_setting( 'track_message', 'message_field' );
-        register_setting('track_message', 'show_mssg_field');
+
+    public function positionOptionsCallback(){
+        $html = sprintf('<select name="position_options">');
+        $html .= sprintf('<option value="top">Top</option>');
+        $html .= sprintf('<option value="bottom">Bottom</option>');
+        $html .= sprintf('</select>');
+        echo $html;
     }
+
     
     public function optionsSettingsText(){
         echo '<p>' . _e( 'Use the color picker below to choose your color.', 'track-message'  ) . '</p>';
