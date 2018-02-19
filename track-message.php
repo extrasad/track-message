@@ -18,8 +18,12 @@ if ( ! function_exists( 'add_action' ) ) {
 
 class TrackMessage{
     private $options;
+
     
     public function __construct(){
+
+        $plugin = plugin_basename( __FILE__ );
+
         add_action( 'wp_enqueue_scripts', array( $this, 'myScripts'));
         add_action('plugins_loaded', array($this,'multilanguage'));
         add_action( 'admin_menu', array( $this, 'tmssgPluginMenu'));
@@ -27,6 +31,7 @@ class TrackMessage{
         add_action( 'admin_init', array( $this, 'mssgFields'));
         add_action('admin_init', array($this, 'registerSettings'));
         add_action( 'admin_init', array( $this, 'settingsInit' ) );
+        add_filter( "plugin_action_links_$plugin", array($this, 'customSettingsLink' ));
 
 
         if( !isset( $_COOKIE["UserFirstTime"])){
@@ -34,7 +39,13 @@ class TrackMessage{
         } 
   
     }
-  
+
+    public function customSettingsLink($links) {
+        $settings_link = '<a href="options-general.php?page=track_message">' . __( 'Settings' ) . '</a>';
+        array_push($links, $settings_link);
+          return $links;
+    }
+
     public function myScripts(){
         $url_plugin_js  =   plugins_url('track-message/js/');
         $url_plugin_css  =   plugins_url('track-message/css/');
