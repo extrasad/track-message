@@ -1,6 +1,6 @@
 <?php
- /
- * @package Track Message
+ /** 
+  *@package Track Message
  */
 /*
 Plugin Name: Track Message
@@ -170,7 +170,7 @@ class TrackMessage{
         echo '<p>' . _e( 'Use the color picker below to choose your color.', 'track-message'  ) . '</p>';
       }
       
-      /
+      /*
        * Display our color field as a text input field.
        */
     public function colorInput(){
