@@ -19,4 +19,3 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' )) {
 delete_option( 'color_options' );
 delete_option( 'background_color_options' );
 delete_option( 'message_field' );
-delete_option( 'show_mssg_field' );

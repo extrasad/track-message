@@ -17,15 +17,15 @@ if ( ! function_exists( 'add_action' ) ) {
   }
 
 class TrackMessage{
-    private $options;
+
     private $message;
 
     
     public function __construct(){
 
         $plugin = plugin_basename( __FILE__ );
-        $this->options = (get_option('message_field'));
-        $this->message = ( $this->options != "" ) ? sanitize_text_field($this->options) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
+        $options = (get_option('message_field'));
+        $this->message = ( $options != "" ) ? sanitize_text_field($options) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
 
         add_action( 'wp_enqueue_scripts', array( $this, 'myScripts'));
         add_action('plugins_loaded', array($this,'multilanguage'));

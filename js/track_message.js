@@ -9,8 +9,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var cookieName = 'UserFirstTime';
   var cookieValue = '1';
   var myDate = new Date();
-  //Cookie duration (1 year)
-  myDate.setFullYear(myDate.getFullYear() + 1);
+  //Cookie duration (2 months)
+  myDate.setMonth(myDate.getMonth() + 2);
   document.cookie = cookieName +"=" + cookieValue + ";expires=" + myDate 
                   + ";path=/";
   };
