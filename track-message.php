@@ -18,17 +18,21 @@ if ( ! function_exists( 'add_action' ) ) {
 
 class TrackMessage{
     private $options;
+    private $message;
 
     
     public function __construct(){
 
         $plugin = plugin_basename( __FILE__ );
+        $this->options = (get_option('message_field'));
+        $this->message = ( $this->options != "" ) ? sanitize_text_field($this->options) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
 
         add_action( 'wp_enqueue_scripts', array( $this, 'myScripts'));
         add_action('plugins_loaded', array($this,'multilanguage'));
         add_action( 'admin_menu', array( $this, 'tmssgPluginMenu'));
         add_action( 'admin_init', array( $this, 'settingsInit' ) );
         add_filter( "plugin_action_links_$plugin", array($this, 'customSettingsLink' ));
+
 
 
         if( !isset( $_COOKIE["UserFirstTime"])){
@@ -146,9 +150,8 @@ class TrackMessage{
     }
     
     public function mssgFieldCallback() {
-        $message = esc_html(get_option('message_field'));
         $html = ('<textarea name="message_field" id="message_field" style="width: 70%;"');
-        $html.= sprintf('type="text">%s</textarea>', $message);
+        $html.= sprintf('type="text">%s</textarea>', $this->message);
 
 
         echo $html;
@@ -203,15 +206,14 @@ class TrackMessage{
     }
 
 
-    public static function tmssgShowMessage(){
+    public function tmssgShowMessage(){
         $color = get_option('color_options');
         $color_applied = $color['color'];
         $background_color = get_option('background_color_options');
         $background_color_applied = $background_color['background_color'];
-        $message = esc_html(get_option('message_field'));
         $accept = __('Accept', 'track-message');
         $html= sprintf('<div style="color : %s; background-color: %s;" id="TrackMessageCookieNotification_Id--3455" class="TrackMessageNotification TrackMessageNotification__content--opennotification">', $color_applied, $background_color_applied);
-        $html.= sprintf('<p>%s</p>', $message);
+        $html.= sprintf('<p>%s</p>', $this->message);
         $html.= sprintf('<span id="TrackMessageCookieNotification_Id--close-5644" class="TrackMessageCookieNotification__inline--btn">%s</span>', $accept );
         $html.= sprintf('</div>');
         echo $html;
