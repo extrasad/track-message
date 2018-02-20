@@ -89,11 +89,11 @@ class TrackMessage{
         </div>
         <?php
         }
-    
+
 
     public function settingsInit(){
         //Text message
-        register_setting( 'track_message', 'message_field' );
+        register_setting( 'track_message', 'message_field');
         
         add_settings_field( 'message_field', __('Write the message', 'track-message'), array( $this, 'mssgFieldCallback' ), 'track_message', 'message_section' );
 
@@ -147,8 +147,8 @@ class TrackMessage{
     
     public function mssgFieldCallback() {
         $message = esc_html(get_option('message_field'));
-        $html = sprintf('<textarea name="message_field" id="message_field" placeholder="%s"', $message);
-        $html.= ('type="text" style="width: 70%;"></textarea>');
+        $html = ('<textarea name="message_field" id="message_field" style="width: 70%;"');
+        $html.= sprintf('type="text">%s</textarea>', $message);
 
 
         echo $html;

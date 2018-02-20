@@ -12,7 +12,7 @@ WP plugin for a customizable track message.
 - [ ] Multi-language
 - [X] Options link in plugin info
 - [X] Placeholder size 
-- [ ] Bd fields have to erase the plugin data
+- [X] Bd fields have to erase the plugin data
 - [ ] Cookie new features 
 - [ ] Colorpicker don't have to load in front-end
-- [ ] Save button 
+- [X] Save button 
