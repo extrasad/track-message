@@ -106,9 +106,7 @@ class TrackMessage{
         //Position - Design
         register_setting('track_message', 'position_options');
 
-        add_settings_field('position_top', __('Where do you want your message to show up?', 'track-message'), array( $this,'positionOptionsCallback'), 'track_message', 'position_section');
-
-        add_settings_field('position_bottom', array( $this,'positionOptionsCallback'), 'track_message', 'position_section');
+        add_settings_field('positions', __('Where do you want your message to show up?', 'track-message'), array( $this,'positionOptionsCallback'), 'track_message', 'position_section');
 
         add_settings_section('position_section', __('Position styles'.'track-message'), false, 'track_message');
         
@@ -161,22 +159,18 @@ class TrackMessage{
 
     public function positionOptionsCallback(){
         $options = get_option( 'position_options' );
+        $position_top = 'top: 0;';
+        $position_bottom = 'bottom: 0;';
+        $checked_top = ($options['positions'] == $position_top ?  'checked="checked"' : '' );
+        $checked_bottom = ($options['positions'] == $position_bottom ?  'checked="checked"' : '' );
 
-        $html = '<input type="radio" id="position_top"
-        name="position_options[position_top]" value="top"'. checked('top', $options['position_top'] ).'>';
-        $html .= '<label for="position_top">Top</label>';
-        $html .= '<input type="radio" id="position_bottom"
-        name="position_options[position_bottom]" value="bottom" '. checked('bottom', $options['position_bottom'] ).'>';
-        $html .= '<label for="position_bottom">Bottom</label>';
+        $html = sprintf('<input type="radio" id="position_top"
+        name="position_options[positions]" value="%s" %s>',$position_top, $checked_top);
+        $html .= sprintf('<label for="position_top">Top</label>');
+        $html .= sprintf('<input type="radio" id="position_bottom"
+        name="position_options[positions]" value="%s" %s>',$position_bottom, $checked_bottom);
+        $html .= sprintf('<label for="position_bottom">Bottom</label>');
         echo $html;
-
-        /*$html = '<input type="radio" id="position_top"
-        name="position_options[positions]" value="top"'. checked('top', $options['positions'] ).'>';
-        $html .= '<label for="position_top">Top</label>';
-        $html .= '<input type="radio" id="position_bottom"
-        name="position_options[positions]" value="bottom" '. checked('botom', $options['positions'] ).'>';
-        $html .= '<label for="position_bottom">Bottom</label>';
-        echo $html;*/
 
     }
 
@@ -223,11 +217,16 @@ class TrackMessage{
 
     public function tmssgShowMessage(){
         $color = get_option('color_options');
+        $position = get_option('position_options');
+        
         $color_applied = $color['color'];
         $background_color = get_option('background_color_options');
         $background_color_applied = $background_color['background_color'];
+
+        $position_applied = $position['positions'];
+
         $accept = __('Accept', 'track-message');
-        $html= sprintf('<div style="color : %s; background-color: %s;" id="TrackMessageCookieNotification_Id--3455" class="TrackMessageNotification TrackMessageNotification__content--opennotification">', $color_applied, $background_color_applied);
+        $html= sprintf('<div style="color : %s; background-color: %s; %s" id="TrackMessageCookieNotification_Id--3455" class="TrackMessageNotification TrackMessageNotification__content--opennotification">', $color_applied, $background_color_applied, $position_applied);
         $html.= sprintf('<p>%s</p>', $this->message);
         $html.= sprintf('<span id="TrackMessageCookieNotification_Id--close-5644" class="TrackMessageCookieNotification__inline--btn">%s</span>', $accept );
         $html.= sprintf('</div>');
