@@ -1,8 +1,14 @@
-.TrackMessageNotification__content--opennotification {
-  animation: openModal 0.5s ease-out forwards; }
+.TrackMessageNotification__content--opennotification-bottom {
+  animation: openModalBottom 0.5s ease-out forwards; }
 
-.TrackMessageNotification__content--closenotification {
-  animation: closeModal 1s ease-out forwards; }
+.TrackMessageNotification__content--closenotification-bottom {
+  animation: closeModalBottom 1s ease-out forwards; }
+
+.TrackMessageNotification__content--opennotification-top {
+  animation: openModalTop 0.5s ease-out forwards; }
+
+.TrackMessageNotification__content--closenotification-top {
+  animation: closeModalTop 1s ease-out forwards; }
 
 .TrackMessageNotification {
   background: #2db34a;
@@ -43,7 +49,21 @@
       background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
       text-decoration: none; }
 
-@keyframes openModal {
+@keyframes openModalTop {
+  0% {
+    opacity: 0.4;
+    transform: translateY(0%); }
+  100% {
+    opacity: 1;
+    transform: translateY(60%); } }
+@keyframes closeModalTop {
+  0% {
+    opacity: 1;
+    transform: translateY(60%); }
+  100% {
+    opacity: 0;
+    transform: translateY(-50%); } }
+@keyframes openModalBottom {
   0% {
     opacity: 0.4;
     transform: translateY(100%); }
@@ -59,7 +79,7 @@
   100% {
     opacity: 1;
     transform: translateY(0%); } }
-@keyframes closeModal {
+@keyframes closeModalBottom {
   0% {
     opacity: 1;
     transform: translateY(0%); }
