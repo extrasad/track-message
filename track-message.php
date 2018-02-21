@@ -222,6 +222,12 @@ class TrackMessage{
     public function tmssgShowMessage(){
         $color = get_option('color_options');
         $position = get_option('position_options');
+<<<<<<< HEAD
+=======
+
+        
+        $color_applied = $color['color'];
+>>>>>>> 6cafa6638e2359a065eaf0ad5c219b5be7cc4830
         $background_color = get_option('background_color_options');
 
         $background_color_applied = $background_color['background_color'];
@@ -235,6 +241,15 @@ class TrackMessage{
         } else {
             $html = sprintf('<div style="color : %s; background-color: %s; %s" id="TrackMessageCookieNotification_Id--3455" class="TrackMessageNotification TrackMessageNotification__content--opennotification-bottom">', $color_applied, $background_color_applied, $position_applied);
         }
+<<<<<<< HEAD
+=======
+
+
+        $position_applied = $position['positions'];
+
+        $accept = __('Accept', 'track-message');
+        $html= sprintf('<div style="color : %s; background-color: %s; %s" id="TrackMessageCookieNotification_Id--3455" class="TrackMessageNotification TrackMessageNotification__content--opennotification">', $color_applied, $background_color_applied, $position_applied);
+>>>>>>> 6cafa6638e2359a065eaf0ad5c219b5be7cc4830
         $html.= sprintf('<p>%s</p>', $this->message);
         $html.= sprintf('<span id="TrackMessageCookieNotification_Id--close-5644" class="TrackMessageCookieNotification__inline--btn">%s</span>', $accept );
         $html.= sprintf('</div>');
