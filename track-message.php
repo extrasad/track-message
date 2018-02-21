@@ -218,10 +218,23 @@ class TrackMessage{
     public function tmssgShowMessage(){
         $color = get_option('color_options');
         $position = get_option('position_options');
+
         
         $color_applied = $color['color'];
         $background_color = get_option('background_color_options');
+
         $background_color_applied = $background_color['background_color'];
+        $color_applied = $color['color'];
+        $position_applied = $position['positions'];
+
+        $accept = __('Accept', 'track-message');
+        
+        if ($position_applied == 'top: 0;'){
+            $html = sprintf('<div style="color : %s; background-color: %s; %s" id="TrackMessageCookieNotification_Id--3455" class="TrackMessageNotification TrackMessageNotification__content--opennotification-top">', $color_applied, $background_color_applied, $position_applied);
+        } else {
+            $html = sprintf('<div style="color : %s; background-color: %s; %s" id="TrackMessageCookieNotification_Id--3455" class="TrackMessageNotification TrackMessageNotification__content--opennotification-bottom">', $color_applied, $background_color_applied, $position_applied);
+        }
+
 
         $position_applied = $position['positions'];
 
