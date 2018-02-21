@@ -52,15 +52,19 @@ class TrackMessage{
         $url_plugin_js  =   plugins_url('track-message/js/');
         $url_plugin_css  =   plugins_url('track-message/css/');
       
+        
+        if (is_admin()){
+            wp_register_script('tmssg_custom_js', $url_plugin_js . 'settings.js');
+            wp_enqueue_style( 'wp-color-picker' );
+            wp_enqueue_script( 'wp-color-picker' );
+            wp_enqueue_script('tmssg_custom_js');    
+        }
+        if ( !isset($_COOKIE['UserFirstTime'])){
         wp_register_script('tmssg_js', $url_plugin_js . 'track_message.js');
-        wp_register_script('tmssg_custom_js', $url_plugin_js . 'settings.js');   
         wp_register_style( 'tmssg_css', $url_plugin_css . 'track_message.css');
         wp_enqueue_style('tmssg_css');
         wp_enqueue_script('tmssg_js');
-        wp_enqueue_script('tmssg_custom_js');        
-        wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_script( 'wp-color-picker' );
-      
+        }
     }
   
     public function multilanguage() {  
