@@ -3,9 +3,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
   const close = document.getElementById("TrackMessageCookieNotification_Id--close-5644");
   const closeModal = function() {
     element.classList.add("TrackMessageNotification__content--closenotification");
-  };
+  }
   //Setting cookie
-  const setCookie = function(){
+  var setCookie = function(){
   var cookieName = 'UserFirstTime';
   var cookieValue = '1';
   var myDate = new Date();
@@ -14,8 +14,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.cookie = cookieName +"=" + cookieValue + ";expires=" + myDate 
                   + ";path=/";
   };
+
+  // Time duration of the message in the page.
+  setTimeout(function () {
+    setCookie()
+    element.classList.add("TrackMessageNotification__content--closenotification");
+  }, 10*1000);
   close.addEventListener('click', closeModal, false);
   close.addEventListener('click', setCookie, false);
+  window.addEventListener('beforeunload', setCookie, false);
+  
 });
 
    
