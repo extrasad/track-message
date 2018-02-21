@@ -52,15 +52,19 @@ class TrackMessage{
         $url_plugin_js  =   plugins_url('track-message/js/');
         $url_plugin_css  =   plugins_url('track-message/css/');
       
+        
+        if (is_admin()){
+            wp_register_script('tmssg_custom_js', $url_plugin_js . 'settings.js');
+            wp_enqueue_style( 'wp-color-picker' );
+            wp_enqueue_script( 'wp-color-picker' );
+            wp_enqueue_script('tmssg_custom_js');    
+        }
+        if ( !isset($_COOKIE['UserFirstTime'])){
         wp_register_script('tmssg_js', $url_plugin_js . 'track_message.js');
-        wp_register_script('tmssg_custom_js', $url_plugin_js . 'settings.js');   
         wp_register_style( 'tmssg_css', $url_plugin_css . 'track_message.css');
         wp_enqueue_style('tmssg_css');
         wp_enqueue_script('tmssg_js');
-        wp_enqueue_script('tmssg_custom_js');        
-        wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_script( 'wp-color-picker' );
-      
+        }
     }
   
     public function multilanguage() {  
@@ -218,9 +222,6 @@ class TrackMessage{
     public function tmssgShowMessage(){
         $color = get_option('color_options');
         $position = get_option('position_options');
-
-        
-        $color_applied = $color['color'];
         $background_color = get_option('background_color_options');
 
         $background_color_applied = $background_color['background_color'];
@@ -234,12 +235,6 @@ class TrackMessage{
         } else {
             $html = sprintf('<div style="color : %s; background-color: %s; %s" id="TrackMessageCookieNotification_Id--3455" class="TrackMessageNotification TrackMessageNotification__content--opennotification-bottom">', $color_applied, $background_color_applied, $position_applied);
         }
-
-
-        $position_applied = $position['positions'];
-
-        $accept = __('Accept', 'track-message');
-        $html= sprintf('<div style="color : %s; background-color: %s; %s" id="TrackMessageCookieNotification_Id--3455" class="TrackMessageNotification TrackMessageNotification__content--opennotification">', $color_applied, $background_color_applied, $position_applied);
         $html.= sprintf('<p>%s</p>', $this->message);
         $html.= sprintf('<span id="TrackMessageCookieNotification_Id--close-5644" class="TrackMessageCookieNotification__inline--btn">%s</span>', $accept );
         $html.= sprintf('</div>');
