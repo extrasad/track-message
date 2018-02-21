@@ -106,7 +106,9 @@ class TrackMessage{
         //Position - Design
         register_setting('track_message', 'position_options');
 
-        add_settings_field('position_options', __('Where do you want your message to show up?', 'track-message'), array( $this,'positionOptionsCallback'), 'track_message', 'position_section');
+        add_settings_field('position_top', __('Where do you want your message to show up?', 'track-message'), array( $this,'positionOptionsCallback'), 'track_message', 'position_section');
+
+        add_settings_field('position_bottom', array( $this,'positionOptionsCallback'), 'track_message', 'position_section');
 
         add_settings_section('position_section', __('Position styles'.'track-message'), false, 'track_message');
         
@@ -158,11 +160,24 @@ class TrackMessage{
     }
 
     public function positionOptionsCallback(){
-        $html = sprintf('<select name="position_options">');
-        $html .= sprintf('<option value="top">Top</option>');
-        $html .= sprintf('<option value="bottom">Bottom</option>');
-        $html .= sprintf('</select>');
+        $options = get_option( 'position_options' );
+
+        $html = '<input type="radio" id="position_top"
+        name="position_options[position_top]" value="top"'. checked('top', $options['position_top'] ).'>';
+        $html .= '<label for="position_top">Top</label>';
+        $html .= '<input type="radio" id="position_bottom"
+        name="position_options[position_bottom]" value="bottom" '. checked('bottom', $options['position_bottom'] ).'>';
+        $html .= '<label for="position_bottom">Bottom</label>';
         echo $html;
+
+        /*$html = '<input type="radio" id="position_top"
+        name="position_options[positions]" value="top"'. checked('top', $options['positions'] ).'>';
+        $html .= '<label for="position_top">Top</label>';
+        $html .= '<input type="radio" id="position_bottom"
+        name="position_options[positions]" value="bottom" '. checked('botom', $options['positions'] ).'>';
+        $html .= '<label for="position_bottom">Bottom</label>';
+        echo $html;*/
+
     }
 
     
