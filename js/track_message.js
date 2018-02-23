@@ -22,7 +22,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // Time duration of the message in the page.
   setTimeout(function () {
     setCookie()
-    element.classList.add("TrackMessageNotification__content--closenotification-bottom");
+    if (element.classList.contains("TrackMessageNotification__content--opennotification-bottom")){
+      element.classList.add("TrackMessageNotification__content--closenotification-bottom");
+      } else {
+        element.classList.add("TrackMessageNotification__content--closenotification-top");
+      }
   }, 10*1000);
   close.addEventListener('click', closeModal, false);
   close.addEventListener('click', setCookie, false);

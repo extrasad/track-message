@@ -15,44 +15,38 @@
 }
 
 .TrackMessageNotification {
-    background: #2db34a;
+    font-size: 12px;
     left: 0;
-    padding: 0.7em 0;
+    padding: 0.5em 0 0.3em 0;
     position: fixed;
     right: 0;
     text-align: center;
+    margin: 0;
     z-index: 500;
     box-sizing: border-box;
     p{
         display: inline;
-        padding-right: 0.8em;
+        font-family: Arial;
+        padding-right: 0.5em;
+        margin: 0;
     }
     .TrackMessageCookieNotification__inline--btn {
-        background: #3498db;
-        background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
-        background-image: -moz-linear-gradient(top, #3498db, #2980b9);
-        background-image: -ms-linear-gradient(top, #3498db, #2980b9);
-        background-image: -o-linear-gradient(top, #3498db, #2980b9);
-        background-image: linear-gradient(to bottom, #3498db, #2980b9);
+        background-color: #3498db;
         -webkit-border-radius: 9;
         -moz-border-radius: 9;
-        border-radius: 9px;
+        border-radius: 2px;
         font-family: Arial;
         color: #ffffff;
-        font-size: 12px;
-        padding: 5px 10px 5px 10px;
-        border: solid #1f628d 2px;
+        font-size: 8px;
+        text-align: center;
+        padding: 3px 6px 3px 6px;
         text-decoration: none;
         cursor: pointer;
         transition-duration: .3s;
+        display: inline;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
         &:hover {
-            background: #3cb0fd;
-            background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
-            background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
-            background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
-            background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
-            background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
-            text-decoration: none;
+            background-color: #3cb0fd;
         }
     }
 }
@@ -65,19 +59,19 @@
 
     100% {
         opacity: 1;
-        transform: translateY(60%);
+        transform: translateY(90%);
     }
 }
 
 @keyframes closeModalTop {
     0% {
         opacity: 1;
-        transform: translateY(60%);
+        transform: translateY(90%);
     }
 
     100% {
         opacity: 0;
-        transform: translateY(-50%);
+        transform: translateY(0%);
     }
 }
 
