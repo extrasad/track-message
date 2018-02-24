@@ -8,6 +8,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
       element.classList.add("TrackMessageNotification__content--closenotification-top");
     }
   }
+  // Getting the cookie value if is setted
+  var getCookie =function(name){
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+    if (parts.length == 2){
+      return parts.pop().split(";").shift();
+    }
+
+  }
   //Setting cookie
   var setCookie = function(){
   var cookieName = 'UserFirstTime';
@@ -15,12 +24,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var myDate = new Date();
   //Cookie duration (2 months)
   myDate.setMonth(myDate.getMonth() + 2);
-  document.cookie = cookieName +"=" + cookieValue + ";expires=" + myDate 
-                  + ";path=/";
-  };
-
+  //Check if cookie is setted to not reset the cookie.
+  var cookie= getCookie("UserFirstTime");
+  //Checking cookie value
+    if (!cookie  == '1'){
+      document.cookie = cookieName +"=" + cookieValue + ";expires=" + myDate 
+      + ";path=/";
+      }
+    };  
   // Time duration of the message in the page.
   setTimeout(function () {
+    closeModal()
     setCookie()
     if (element.classList.contains("TrackMessageNotification__content--opennotification-bottom")){
       element.classList.add("TrackMessageNotification__content--closenotification-bottom");
