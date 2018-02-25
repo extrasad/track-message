@@ -36,11 +36,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
   setTimeout(function () {
     closeModal()
     setCookie()
-    if (element.classList.contains("TrackMessageNotification__content--opennotification-bottom")){
-      element.classList.add("TrackMessageNotification__content--closenotification-bottom");
-      } else {
-        element.classList.add("TrackMessageNotification__content--closenotification-top");
-      }
   }, 10*1000);
   close.addEventListener('click', closeModal, false);
   close.addEventListener('click', setCookie, false);
