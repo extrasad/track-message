@@ -15,9 +15,9 @@
 }
 
 .TrackMessageNotification {
-    font-size: 12px;
+    font-size: 14px;
     left: 0;
-    padding: 0.5em 0 0.3em 0;
+    padding: 0.5em 0 0.5em 0;
     position: fixed;
     right: 0;
     text-align: center;
@@ -35,11 +35,11 @@
         -webkit-border-radius: 9;
         -moz-border-radius: 9;
         border-radius: 2px;
-        font-family: Arial;
+        font-family: Helvetica;
         color: #ffffff;
-        font-size: 8px;
+        font-size: 10px;
         text-align: center;
-        padding: 3px 6px 3px 6px;
+        padding: 4px 7px 4px 7px;
         text-decoration: none;
         cursor: pointer;
         transition-duration: .3s;
@@ -54,24 +54,24 @@
 @keyframes openModalTop {
     0% {
         opacity: 0.4;
-        transform: translateY(0%);
+        transform: translateY(-100%);
     }
 
     100% {
         opacity: 1;
-        transform: translateY(90%);
+        transform: translateY(0%);
     }
 }
 
 @keyframes closeModalTop {
     0% {
         opacity: 1;
-        transform: translateY(90%);
+        transform: translateY(0%);
     }
 
     100% {
         opacity: 0;
-        transform: translateY(0%);
+        transform: translateY(-100%);
     }
 }
 
