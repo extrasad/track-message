@@ -106,13 +106,26 @@ class TrackMessage{
         add_settings_field( 'message_field', __('Write the message', 'track-message'), array( $this, 'mssgFieldCallback' ), 'track_message', 'message_section' );
 
         add_settings_section( 'message_section', __('¡Add a message to notify your visitors!','track-message'), false, 'track_message' );
+
+        //Message Time
+        register_setting( 'track_message', 'message_time');
         
+        add_settings_field( 'message_time', __('Set time duration of the message ', 'track-message'), array( $this, 'mssgTimeCallback' ), 'track_message', 'message_time' );
+
+        add_settings_section( 'message_time', __('','track-message'), false, 'track_message' );
+        //Cookie Time
+        register_setting( 'track_message', 'cookie_time');
+        
+        add_settings_field( 'cookie_time', __('Set cookie time', 'track-message'), array( $this, 'cookieTimeCallback' ), 'track_message', 'cookie_time' );
+
+        add_settings_section( 'cookie_time', __('Cookie settings','track-message'), false, 'track_message' );
+
         //Position - Design
         register_setting('track_message', 'position_options');
 
         add_settings_field('positions', __('Where do you want your message to show up?', 'track-message'), array( $this,'positionOptionsCallback'), 'track_message', 'position_section');
 
-        add_settings_section('position_section', __('Position styles'.'track-message'), false, 'track_message');
+        add_settings_section('position_section', __('Position styles','track-message'), false, 'track_message');
         
         //Color Picker - Design
         register_setting(
@@ -123,7 +136,7 @@ class TrackMessage{
           
         add_settings_section(
             'wp-color-picker-section',
-            __( 'Choose Your Color'.'track-message' ),
+            __( 'Choose Your Color', 'track-message' ),
             array( $this, 'optionsSettingsText' ),
             'track_message'
         );
@@ -153,13 +166,36 @@ class TrackMessage{
         
     }
     
+    public function cookieTimeCallback() {
+        $html = ('<select name="select">');
+        $html.= ('<option value="value1">Value 1</option>');
+        $html.= ('<option value="value2" selected>Value 2</option>');
+        $html.= ('<option value="value3">Value 3</option>');
+        $html.= ('<option value="value3">Value 3</option>');
+        $html.= ('</select>');
+
+        echo $html;
+    }
+
     public function mssgFieldCallback() {
         $html = ('<textarea name="message_field" id="message_field" style="width: 70%;"');
         $html.= sprintf('type="text">%s</textarea>', $this->message);
 
 
         echo $html;
-    }
+    }    
+
+    public function mssgTimeCallback() {
+        $html = ('<select name="select2">');
+        $html.= ('<option value="value1">Value 1</option>');
+        $html.= ('<option value="value2" selected>Value 2</option>');
+        $html.= ('<option value="value3">Value 3</option>');
+        $html.= ('<option value="value3">Value 3</option>');
+        $html.= ('</select>');
+
+        echo $html;
+    }    
+
 
     public function positionOptionsCallback(){
         $options = get_option( 'position_options' );
@@ -223,7 +259,6 @@ class TrackMessage{
         $color = get_option('color_options');
         $position = get_option('position_options');
         $background_color = get_option('background_color_options');
-
         $background_color_applied = $background_color['background_color'];
         $color_applied = $color['color'];
         $position_applied = $position['positions'];
