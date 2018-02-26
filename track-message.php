@@ -158,6 +158,35 @@ class TrackMessage{
             'wp-color-picker-section'
         );
 
+        //Button color settings
+
+        register_setting(
+            'track_message',
+            'btn_color_options',
+            array( $this, 'validateBtnColorOptions' )
+        );
+          
+        add_settings_field(
+            'btn_color',
+            __( 'Button Color', 'track-message'  ),
+            array( $this, 'btnColorInput' ),
+            'track_message',
+            'wp-color-picker-section'
+        );
+
+        register_setting(
+            'track_message',
+            'background_btn_color_options',
+            array( $this, 'validateBtnBackgroundOptions' )
+        );
+          
+        add_settings_field(
+            'background_btn_color',
+            __( 'Button Background Color', 'track-message'  ),
+            array( $this, 'btnBackgroundColorInput' ),
+            'track_message',
+            'wp-color-picker-section'
+        );
         
     }
     
@@ -248,12 +277,48 @@ class TrackMessage{
         
         return $valid;
     }
+     // Button Color settings
+    public function btnColorInput(){
+        $options = get_option( 'btn_color_options' );
+        $color = ( $options['btn_color'] != "" ) ? sanitize_text_field( $options['btn_color'] ) : '#000000';
+        
+        
+        $html = sprintf('<input class="TrackMessageNotification__content--edit-color" name="btn_color_options[btn_color]" type="text" value="'. $color .'" />');
+        echo $html;
+    }
+
+    public function validateBtnColorOptions( $input ){
+        $valid = array();
+        $valid['btn_color'] = sanitize_text_field( $input['btn_color'] );
+        
+        return $valid;
+    }
+
+    public function btnBackgroundColorInput(){
+        $options = get_option( 'background_btn_color_options' );
+        $color = ( $options['background_btn_color'] != "" ) ? sanitize_text_field( $options['background_btn_color'] ) : '#ffffff';
+        
+        
+        $html = sprintf('<input class="TrackMessageNotification__content--edit-color" name="background_btn_color_options[background_btn_color]" type="text" value="'. $color .'" />');
+        echo $html;
+    }
+
+    public function validateBtnBackgroundOptions( $input ){
+        $valid = array();
+        $valid['background_btn_color'] = sanitize_text_field( $input['background_btn_color'] );
+        
+        return $valid;
+    }
 
 
     public function tmssgShowMessage(){
         $color = get_option('color_options');
         $position = get_option('position_options');
         $background_color = get_option('background_color_options');
+        $btn_color = get_option('btn_color_options');
+        $btn_background_color = get_option('background_btn_color_options');
+        $btn_color_applied = $btn_color['btn_color'];
+        $btn_background_color_applied = $btn_background_color['background_btn_color'];
         $background_color_applied = $background_color['background_color'];
         $color_applied = $color['color'];
         $position_applied = $position['positions'];
@@ -266,7 +331,7 @@ class TrackMessage{
             $html = sprintf('<div style="color : %s; background-color: %s; %s" id="TrackMessageCookieNotification_Id--3455" class="TrackMessageNotification TrackMessageNotification__content--opennotification-bottom">', $color_applied, $background_color_applied, $position_applied);
         }
         $html.= sprintf('<p>%s</p>', $this->message);
-        $html.= sprintf('<span id="TrackMessageCookieNotification_Id--close-5644" class="TrackMessageCookieNotification__inline--btn">%s</span>', $accept );
+        $html.= sprintf('<span style="color : %s; background-color: %s;" id="TrackMessageCookieNotification_Id--close-5644" class="TrackMessageCookieNotification__inline--btn">%s</span>',$btn_color_applied, $btn_background_color_applied, $accept );
         $html.= sprintf('</div>');
         echo $html;
     }
