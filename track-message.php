@@ -4,10 +4,9 @@
  */
 /*
 Plugin Name: Track Message
-Description: WP plugin for a customizable track message.
+Description: Track Message allows you to inform users with a customizable and elegant message that your site uses cookies to track them.
 Version: 1.0
 Text Domain: track-message
-Domain Path: /languages/
 
 */
 // Security check
@@ -28,7 +27,6 @@ class TrackMessage{
         $this->message = ( $options != "" ) ? sanitize_text_field($options) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
 
         add_action( 'wp_enqueue_scripts', array( $this, 'myScripts'));
-        add_action('plugins_loaded', array($this,'multilanguage'));
         add_action( 'admin_menu', array( $this, 'tmssgPluginMenu'));
         add_action( 'admin_init', array( $this, 'settingsInit' ) );
         add_filter( "plugin_action_links_$plugin", array($this, 'customSettingsLink' ));
@@ -67,9 +65,6 @@ class TrackMessage{
         }
     }
   
-    public function multilanguage() {  
-    load_plugin_textdomain( 'track-message', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );  
-        }
 
     // Custom Message Section
     public function tmssgPluginMenu() {
@@ -125,7 +120,7 @@ class TrackMessage{
 
         add_settings_field('positions', __('Where do you want your message to show up?', 'track-message'), array( $this,'positionOptionsCallback'), 'track_message', 'position_section');
 
-        add_settings_section('position_section', __('Position styles','track-message'), false, 'track_message');
+        add_settings_section('position_section', __('Message Position','track-message'), false, 'track_message');
         
         //Color Picker - Design
         register_setting(
@@ -205,10 +200,10 @@ class TrackMessage{
         $checked_bottom = ($options['positions'] == $position_bottom ?  'checked="checked"' : '' );
 
         $html = sprintf('<input type="radio" id="position_top"
-        name="position_options[positions]" value="%s" %s>',$position_top, $checked_top);
+        name="position_options[positions]" value="%s" %s style="margin: 3px 5px 3px 5px;">',$position_top, $checked_top);
         $html .= sprintf('<label for="position_top">Top</label>');
         $html .= sprintf('<input type="radio" id="position_bottom"
-        name="position_options[positions]" value="%s" %s>',$position_bottom, $checked_bottom);
+        name="position_options[positions]" value="%s" %s style="margin: 3px 5px 3px 5px;">',$position_bottom, $checked_bottom);
         $html .= sprintf('<label for="position_bottom">Bottom</label>');
         echo $html;
 
@@ -216,7 +211,7 @@ class TrackMessage{
 
     
     public function optionsSettingsText(){
-        echo '<p>' . _e( 'Use the color picker below to choose your color.', 'track-message'  ) . '</p>';
+        echo '<p>' . _e( 'Use the color picker below to choose the color of your message', 'track-message'  ) . '</p>';
       }
       
       /*
@@ -224,7 +219,7 @@ class TrackMessage{
        */
     public function colorInput(){
         $options = get_option( 'color_options' );
-        $color = ( $options['color'] != "" ) ? sanitize_text_field( $options['color'] ) : '#3D9B0C';
+        $color = ( $options['color'] != "" ) ? sanitize_text_field( $options['color'] ) : '#000000';
         
         
         $html = sprintf('<input class="TrackMessageNotification__content--edit-color" name="color_options[color]" type="text" value="'. $color .'" />');
@@ -240,7 +235,7 @@ class TrackMessage{
 
     public function backgroundColorInput(){
         $options = get_option( 'background_color_options' );
-        $color = ( $options['background_color'] != "" ) ? sanitize_text_field( $options['background_color'] ) : '#3D9B0C';
+        $color = ( $options['background_color'] != "" ) ? sanitize_text_field( $options['background_color'] ) : '#ffffff';
         
         
         $html = sprintf('<input class="TrackMessageNotification__content--edit-color" name="background_color_options[background_color]" type="text" value="'. $color .'" />');
