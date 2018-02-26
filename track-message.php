@@ -105,7 +105,7 @@ class TrackMessage{
         //Message Time
         register_setting( 'track_message', 'message_time');
         
-        add_settings_field( 'message_time', __('Set time duration of the message ', 'track-message'), array( $this, 'mssgTimeCallback' ), 'track_message', 'message_time' );
+        add_settings_field( 'message_time', __('Set message duration on front-page', 'track-message'), array( $this, 'mssgTimeCallback' ), 'track_message', 'message_time' );
 
         add_settings_section( 'message_time', __('','track-message'), false, 'track_message' );
         //Cookie Time
