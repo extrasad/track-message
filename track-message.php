@@ -467,7 +467,7 @@ private $message_options;
         } else {
             $html = sprintf('<div style="%s %s %s" id="%s" class="%s">', esc_attr($color_applied), esc_attr($background_color_applied), esc_attr($position_applied), esc_attr($id), esc_attr($class_bot));
         }
-        $html.= sprintf('<p>%s</p>', esc_html__($this->message,'track_message'));
+        $html.= sprintf('<p>%s</p>', esc_html__($this->message,'track-message'));
         $html.= sprintf('<span style="%s %s" id="%s" class="%s">%s</span>', esc_attr($btn_color_applied), esc_attr($btn_background_color_applied), esc_attr($id_button), esc_attr($class_button), esc_html($accept));
         $html.= sprintf('</div>');
         echo $html;
