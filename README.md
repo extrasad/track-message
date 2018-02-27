@@ -13,6 +13,6 @@ WP plugin for a customizable track message.
 - [X] Options link in plugin info
 - [X] Placeholder size 
 - [X] Bd fields have to erase the plugin data
-- [ ] Cookie new features 
+- [X] Cookie new features 
 - [X] Colorpicker don't have to load in front-end
 - [X] Save button 

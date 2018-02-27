@@ -31,12 +31,10 @@
         margin: 0;
     }
     .TrackMessageCookieNotification__inline--btn {
-        background-color: #3498db;
         -webkit-border-radius: 9;
         -moz-border-radius: 9;
         border-radius: 2px;
         font-family: Helvetica;
-        color: #ffffff;
         font-size: 10px;
         text-align: center;
         padding: 4px 7px 4px 7px;
@@ -44,9 +42,9 @@
         cursor: pointer;
         transition-duration: .3s;
         display: inline;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.19);
         &:hover {
-            background-color: #3cb0fd;
+            box-shadow: 0 16px 30px rgba(0,0,0,0.30), 0 10px 10px rgba(0,0,0,0.25);
         }
     }
 }
