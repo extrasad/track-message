@@ -5,10 +5,15 @@
 /*
 Plugin Name: Track Message
 Description: Track Message allows you to inform users with a customizable and elegant message that your site uses cookies to track them.
-Version: 1.0
+Author: CmantikWeb - Dev. Carlos Rivas,  Dev Abdiangel Urdaneta
+Author URI: https://cmantikweb.com/
+Version: 1.0.0
+License: GPLv2 or later
+License URI: https://opensource.org/licenses/GPL-2.0
 Text Domain: track-message
 
 */
+
 // Security check
 if ( ! function_exists( 'add_action' ) ) {
     echo 'You don\'t have permission to access this file.';
@@ -93,8 +98,9 @@ private $message_options;
 
     // Register scripts.
     public function myScripts(){
-        $url_plugin_js  =   plugins_url('track-message/js/');
-        $url_plugin_css  =   plugins_url('track-message/css/');
+        $plugin_dir = plugin_dir_url(__FILE__);
+        $url_plugin_js  =   ($plugin_dir.'js/');
+        $url_plugin_css  =   ($plugin_dir.'css/');
         $js_settings = array(
             'cookie' => $this->cookie_options['cookie_time'],
             'message' => $this->message_options['message_time']
@@ -316,9 +322,9 @@ private $message_options;
     }
 
     public function mssgFieldCallback() {
-        $style = ('width: 70%;');
+        $style = ('width: 70%;');       
         $html = sprintf('<textarea name="%s" id="%s" style="%s"',esc_attr('message_field'), esc_attr('message_field'), esc_attr($style));
-        $html.= sprintf('type="text">%s</textarea>', esc_html($this->message));
+        $html.= sprintf('type="text">%s</textarea>', esc_html__($this->message));
 
 
         echo $html;
@@ -454,14 +460,14 @@ private $message_options;
         $id = ('TrackMessageCookieNotification_Id--3455');
         $class_top = ('TrackMessageNotification TrackMessageNotification__content--opennotification-top');
         $class_bot = ('TrackMessageNotification TrackMessageNotification__content--opennotification-bottom');
-        $accept = __('Accept', 'track-message');
+        $accept = esc_html__('Accept', 'track-message');
         
         if ($position_applied == 'top: 0;'){
             $html = sprintf('<div style="%s %s %s" id="%s" class="%s">', esc_attr($color_applied), esc_attr($background_color_applied), esc_attr($position_applied), esc_attr($id), esc_attr($class_top));
         } else {
             $html = sprintf('<div style="%s %s %s" id="%s" class="%s">', esc_attr($color_applied), esc_attr($background_color_applied), esc_attr($position_applied), esc_attr($id), esc_attr($class_bot));
         }
-        $html.= sprintf('<p>%s</p>', esc_html($this->message));
+        $html.= sprintf('<p>%s</p>', esc_html__($this->message,'track_message'));
         $html.= sprintf('<span style="%s %s" id="%s" class="%s">%s</span>', esc_attr($btn_color_applied), esc_attr($btn_background_color_applied), esc_attr($id_button), esc_attr($class_button), esc_html($accept));
         $html.= sprintf('</div>');
         echo $html;

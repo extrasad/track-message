@@ -9,7 +9,7 @@ WP plugin for a customizable track message.
 - [X] Verify if the user is on the page for the first time
 - [X] Customize the text of the message
 - [X] Customize the color of the message
-- [ ] Multi-language
+- [X] Multi-language
 - [X] Options link in plugin info
 - [X] Placeholder size 
 - [X] Bd fields have to erase the plugin data
