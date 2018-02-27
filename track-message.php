@@ -17,15 +17,61 @@ if ( ! function_exists( 'add_action' ) ) {
 
 class TrackMessage{
 
-    private $message;
+private $message;
+private $cookie_settings;
+private $message_settings;
+private $cookie_options;
+private $message_options;
 
     
     public function __construct(){
 
         $plugin = plugin_basename( __FILE__ );
-        $options = (get_option('message_field'));
+        $options = get_option('message_field');
         $this->message = ( $options != "" ) ? sanitize_text_field($options) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
-
+        $this->message_options = get_option('message_time_settings');
+        $this->cookie_options = get_option('cookie_time_settings');
+        $this->cookie_settings=array(
+                        1   =>      __('1 Month','track-message'),
+                        2   =>      __('2 Months','track-message'),
+                        3   =>      __('3 Months','track-message'),
+                        4   =>      __('4 Months','track-message'),
+                        5   =>      __('5 Months','track-message'),
+                        6   =>      __('6 Months','track-message'),
+                        7   =>      __('7 Months','track-message'),
+                        8   =>      __('8 Months','track-message'),
+                        9   =>      __('9 Months','track-message'),
+                        10   =>     __('10 Months','track-message'),
+                        11   =>     __('11 Months','track-message'),
+                        12   =>     __('12 Months','track-message'),
+                        13   =>     __('13 Months','track-message'),
+                        14   =>     __('14 Months','track-message'),
+                        15   =>     __('15 Months','track-message'),
+                        16   =>     __('16 Months','track-message'),
+                        17   =>     __('17 Months','track-message'),
+                        18   =>     __('18 Months','track-message'),
+                        19   =>     __('19 Months','track-message'),
+                        20   =>     __('20 Months','track-message'),
+                        21   =>     __('21 Months','track-message'),
+                        23   =>     __('22 Months','track-message'),
+                        22   =>     __('23 Months','track-message'),
+                        24   =>     __('24 Months','track-message'),                                
+        );
+        $this->message_settings=array(
+                        12   =>      __('12 Seconds','track-message'),
+                        15   =>      __('15 Seconds','track-message'),
+                        20   =>      __('20 Seconds','track-message'),
+                        25   =>      __('25 Seconds','track-message'),
+                        30   =>      __('30 Seconds','track-message'),
+                        35   =>      __('35 Seconds','track-message'),
+                        40   =>      __('40 Seconds','track-message'),
+                        45   =>      __('45 Seconds','track-message'),
+                        50   =>      __('50 Seconds','track-message'),
+                        55   =>      __('55 Seconds','track-message'),
+                        60   =>      __('60 Seconds','track-message'),
+                        65   =>      __('65 Seconds','track-message'),
+                        70   =>      __('70 Seconds','track-message'),                               
+        );
         add_action( 'wp_enqueue_scripts', array( $this, 'myScripts'));
         add_action( 'admin_menu', array( $this, 'tmssgPluginMenu'));
         add_action( 'admin_init', array( $this, 'settingsInit' ) );
@@ -49,6 +95,10 @@ class TrackMessage{
     public function myScripts(){
         $url_plugin_js  =   plugins_url('track-message/js/');
         $url_plugin_css  =   plugins_url('track-message/css/');
+        $js_settings = array(
+            'cookie' => $this->cookie_options['cookie_time'],
+            'message' => $this->message_options['message_time']
+        );
       
         
         if (is_admin()){
@@ -63,6 +113,7 @@ class TrackMessage{
             wp_enqueue_style('tmssg_css');
             wp_enqueue_script('tmssg_js');
         }
+        wp_localize_script('tmssg_js', 'phpValues', $js_settings);
     }
   
 
@@ -93,34 +144,92 @@ class TrackMessage{
         <?php
         }
 
-
     public function settingsInit(){
         //Text message
-        register_setting( 'track_message', 'message_field');
+        register_setting( 
+            'track_message', 
+            'message_field'
+        );
         
-        add_settings_field( 'message_field', __('Write the message', 'track-message'), array( $this, 'mssgFieldCallback' ), 'track_message', 'message_section' );
+        add_settings_field( 
+            'message_field',
+            __('Write the message', 'track-message'), 
+            array( $this, 'mssgFieldCallback' ), 
+            'track_message', 'message_section' 
+        );
 
-        add_settings_section( 'message_section', __('¡Add a message to notify your visitors!','track-message'), false, 'track_message' );
+        add_settings_section( 
+            'message_section', 
+            __('¡Add a message to notify your visitors!',
+            'track-message'), 
+            false, 
+            'track_message' 
+        );
 
         //Message Time
-        register_setting( 'track_message', 'message_time');
+        register_setting( 
+            'track_message', 
+            'message_time_settings'
+        );
         
-        add_settings_field( 'message_time', __('Set message duration on front-page', 'track-message'), array( $this, 'mssgTimeCallback' ), 'track_message', 'message_time' );
+        add_settings_field( 
+            'message_time',
+            __('Set message duration on front-page ', 
+            'track-message'), 
+            array( $this, 'mssgTimeCallback' ), 
+            'track_message', 
+            'message_time' 
+        );
 
-        add_settings_section( 'message_time', __('','track-message'), false, 'track_message' );
+        add_settings_section( 
+            'message_time', 
+            __('','track-message'), 
+            false, 
+            'track_message' 
+        );
         //Cookie Time
-        register_setting( 'track_message', 'cookie_time');
+        register_setting( 
+            'track_message', 
+            'cookie_time_settings'
+        );
         
-        add_settings_field( 'cookie_time', __('Set cookie time', 'track-message'), array( $this, 'cookieTimeCallback' ), 'track_message', 'cookie_time' );
+        add_settings_field(
+            'cookie_time', 
+            __('Set cookie duration to expire',
+            'track-message'), 
+            array( $this, 'cookieTimeCallback' ), 
+            'track_message', 
+            'cookie_time' 
+        );
 
-        add_settings_section( 'cookie_time', __('Cookie settings','track-message'), false, 'track_message' );
+        add_settings_section(
+            'cookie_time', 
+            __('Cookie settings',
+            'track-message'), 
+            false, 
+            'track_message' 
+        );
 
         //Position - Design
-        register_setting('track_message', 'position_options');
+        register_setting(
+            'track_message', 
+            'position_options');
 
-        add_settings_field('positions', __('Where do you want your message to show up?', 'track-message'), array( $this,'positionOptionsCallback'), 'track_message', 'position_section');
+        add_settings_field(
+            'positions', 
+            __('Where do you want your message to show up?', 
+            'track-message'), 
+            array( $this,'positionOptionsCallback'), 
+            'track_message', 
+            'position_section'
+        );
 
-        add_settings_section('position_section', __('Message Position','track-message'), false, 'track_message');
+        add_settings_section(
+            'position_section', 
+            __('Message Position','track-message'), 
+            false, 
+            'track_message'
+        );
         
         //Color Picker - Design
         register_setting(
@@ -157,8 +266,7 @@ class TrackMessage{
             'track_message',
             'wp-color-picker-section'
         );
-
-        //Button color settings
+                //Button color settings
 
         register_setting(
             'track_message',
@@ -187,18 +295,22 @@ class TrackMessage{
             'track_message',
             'wp-color-picker-section'
         );
-        
     }
-    
+       
+         
     public function cookieTimeCallback() {
-        $html = ('<select name="select">');
-        $html.= ('<option value="value1">Value 1</option>');
-        $html.= ('<option value="value2" selected>Value 2</option>');
-        $html.= ('<option value="value3">Value 3</option>');
-        $html.= ('<option value="value3">Value 3</option>');
-        $html.= ('</select>');
+        $html =('<select name="cookie_time_settings[cookie_time]">');
+        foreach($this->cookie_settings as $key => $value)
+        {
+            if(!isset($this->cookie_options['cookie_time']) && $key == 12){
+                $html .= sprintf('<option value="%d" selected>%s</option>', $key, $value);  
+            }else{
+            $html .= sprintf('<option value="%d"'.selected( $this->cookie_options['cookie_time'], $key, false ).'>%s</option>', $key, $value);
+            }
+        }   
+        $html .= ('</select>');
 
-        echo $html;
+        echo $html;  
     }
 
     public function mssgFieldCallback() {
@@ -210,15 +322,19 @@ class TrackMessage{
     }    
 
     public function mssgTimeCallback() {
-        $html = ('<select name="select2">');
-        $html.= ('<option value="value1">Value 1</option>');
-        $html.= ('<option value="value2" selected>Value 2</option>');
-        $html.= ('<option value="value3">Value 3</option>');
-        $html.= ('<option value="value3">Value 3</option>');
-        $html.= ('</select>');
+        $html =('<select name="message_time_settings[message_time]">');
+        foreach($this->message_settings as $key => $value)
+        {
+            if(!isset($this->message_options['message_time']) && $key == 30){
+                $html .= sprintf('<option value="%d" selected>%s</option>', $key, $value);  
+            }else{
+            $html .= sprintf('<option value="%d"'.selected( $this->message_options['message_time'], $key, false ).'>%s</option>', $key, $value);
+            }
+        }
+        $html .= ('</select>');
 
-        echo $html;
-    }    
+        echo $html;    
+    }
 
 
     public function positionOptionsCallback(){

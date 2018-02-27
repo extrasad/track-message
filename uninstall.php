@@ -19,3 +19,8 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' )) {
 delete_option( 'color_options' );
 delete_option( 'background_color_options' );
 delete_option( 'message_field' );
+delete_option( 'position_options' );
+delete_option( 'cookie_time_settings' );
+delete_option( 'message_time_settings' );
+delete_option( 'btn_color_options' );
+delete_option( 'background_btn_color_options' ); 
