@@ -4,10 +4,9 @@
  */
 /*
 Plugin Name: Track Message
-Description: WP plugin for a customizable track message.
+Description: Track Message allows you to inform users with a customizable and elegant message that your site uses cookies to track them.
 Version: 1.0
 Text Domain: track-message
-Domain Path: /languages/
 
 */
 // Security check
@@ -28,7 +27,6 @@ class TrackMessage{
         $this->message = ( $options != "" ) ? sanitize_text_field($options) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
 
         add_action( 'wp_enqueue_scripts', array( $this, 'myScripts'));
-        add_action('plugins_loaded', array($this,'multilanguage'));
         add_action( 'admin_menu', array( $this, 'tmssgPluginMenu'));
         add_action( 'admin_init', array( $this, 'settingsInit' ) );
         add_filter( "plugin_action_links_$plugin", array($this, 'customSettingsLink' ));
@@ -67,9 +65,6 @@ class TrackMessage{
         }
     }
   
-    public function multilanguage() {  
-    load_plugin_textdomain( 'track-message', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );  
-        }
 
     // Custom Message Section
     public function tmssgPluginMenu() {
@@ -110,7 +105,7 @@ class TrackMessage{
         //Message Time
         register_setting( 'track_message', 'message_time');
         
-        add_settings_field( 'message_time', __('Set time duration of the message ', 'track-message'), array( $this, 'mssgTimeCallback' ), 'track_message', 'message_time' );
+        add_settings_field( 'message_time', __('Set message duration on front-page', 'track-message'), array( $this, 'mssgTimeCallback' ), 'track_message', 'message_time' );
 
         add_settings_section( 'message_time', __('','track-message'), false, 'track_message' );
         //Cookie Time
@@ -125,7 +120,7 @@ class TrackMessage{
 
         add_settings_field('positions', __('Where do you want your message to show up?', 'track-message'), array( $this,'positionOptionsCallback'), 'track_message', 'position_section');
 
-        add_settings_section('position_section', __('Position styles','track-message'), false, 'track_message');
+        add_settings_section('position_section', __('Message Position','track-message'), false, 'track_message');
         
         //Color Picker - Design
         register_setting(
@@ -163,6 +158,35 @@ class TrackMessage{
             'wp-color-picker-section'
         );
 
+        //Button color settings
+
+        register_setting(
+            'track_message',
+            'btn_color_options',
+            array( $this, 'validateBtnColorOptions' )
+        );
+          
+        add_settings_field(
+            'btn_color',
+            __( 'Button Color', 'track-message'  ),
+            array( $this, 'btnColorInput' ),
+            'track_message',
+            'wp-color-picker-section'
+        );
+
+        register_setting(
+            'track_message',
+            'background_btn_color_options',
+            array( $this, 'validateBtnBackgroundOptions' )
+        );
+          
+        add_settings_field(
+            'background_btn_color',
+            __( 'Button Background Color', 'track-message'  ),
+            array( $this, 'btnBackgroundColorInput' ),
+            'track_message',
+            'wp-color-picker-section'
+        );
         
     }
     
@@ -205,10 +229,10 @@ class TrackMessage{
         $checked_bottom = ($options['positions'] == $position_bottom ?  'checked="checked"' : '' );
 
         $html = sprintf('<input type="radio" id="position_top"
-        name="position_options[positions]" value="%s" %s>',$position_top, $checked_top);
+        name="position_options[positions]" value="%s" %s style="margin: 3px 5px 3px 5px;">',$position_top, $checked_top);
         $html .= sprintf('<label for="position_top">Top</label>');
         $html .= sprintf('<input type="radio" id="position_bottom"
-        name="position_options[positions]" value="%s" %s>',$position_bottom, $checked_bottom);
+        name="position_options[positions]" value="%s" %s style="margin: 3px 5px 3px 5px;">',$position_bottom, $checked_bottom);
         $html .= sprintf('<label for="position_bottom">Bottom</label>');
         echo $html;
 
@@ -216,7 +240,7 @@ class TrackMessage{
 
     
     public function optionsSettingsText(){
-        echo '<p>' . _e( 'Use the color picker below to choose your color.', 'track-message'  ) . '</p>';
+        echo '<p>' . _e( 'Use the color picker below to choose the color of your message', 'track-message'  ) . '</p>';
       }
       
       /*
@@ -224,7 +248,7 @@ class TrackMessage{
        */
     public function colorInput(){
         $options = get_option( 'color_options' );
-        $color = ( $options['color'] != "" ) ? sanitize_text_field( $options['color'] ) : '#3D9B0C';
+        $color = ( $options['color'] != "" ) ? sanitize_text_field( $options['color'] ) : '#000000';
         
         
         $html = sprintf('<input class="TrackMessageNotification__content--edit-color" name="color_options[color]" type="text" value="'. $color .'" />');
@@ -240,7 +264,7 @@ class TrackMessage{
 
     public function backgroundColorInput(){
         $options = get_option( 'background_color_options' );
-        $color = ( $options['background_color'] != "" ) ? sanitize_text_field( $options['background_color'] ) : '#3D9B0C';
+        $color = ( $options['background_color'] != "" ) ? sanitize_text_field( $options['background_color'] ) : '#ffffff';
         
         
         $html = sprintf('<input class="TrackMessageNotification__content--edit-color" name="background_color_options[background_color]" type="text" value="'. $color .'" />');
@@ -253,12 +277,48 @@ class TrackMessage{
         
         return $valid;
     }
+     // Button Color settings
+    public function btnColorInput(){
+        $options = get_option( 'btn_color_options' );
+        $color = ( $options['btn_color'] != "" ) ? sanitize_text_field( $options['btn_color'] ) : '#000000';
+        
+        
+        $html = sprintf('<input class="TrackMessageNotification__content--edit-color" name="btn_color_options[btn_color]" type="text" value="'. $color .'" />');
+        echo $html;
+    }
+
+    public function validateBtnColorOptions( $input ){
+        $valid = array();
+        $valid['btn_color'] = sanitize_text_field( $input['btn_color'] );
+        
+        return $valid;
+    }
+
+    public function btnBackgroundColorInput(){
+        $options = get_option( 'background_btn_color_options' );
+        $color = ( $options['background_btn_color'] != "" ) ? sanitize_text_field( $options['background_btn_color'] ) : '#ffffff';
+        
+        
+        $html = sprintf('<input class="TrackMessageNotification__content--edit-color" name="background_btn_color_options[background_btn_color]" type="text" value="'. $color .'" />');
+        echo $html;
+    }
+
+    public function validateBtnBackgroundOptions( $input ){
+        $valid = array();
+        $valid['background_btn_color'] = sanitize_text_field( $input['background_btn_color'] );
+        
+        return $valid;
+    }
 
 
     public function tmssgShowMessage(){
         $color = get_option('color_options');
         $position = get_option('position_options');
         $background_color = get_option('background_color_options');
+        $btn_color = get_option('btn_color_options');
+        $btn_background_color = get_option('background_btn_color_options');
+        $btn_color_applied = $btn_color['btn_color'];
+        $btn_background_color_applied = $btn_background_color['background_btn_color'];
         $background_color_applied = $background_color['background_color'];
         $color_applied = $color['color'];
         $position_applied = $position['positions'];
@@ -271,7 +331,7 @@ class TrackMessage{
             $html = sprintf('<div style="color : %s; background-color: %s; %s" id="TrackMessageCookieNotification_Id--3455" class="TrackMessageNotification TrackMessageNotification__content--opennotification-bottom">', $color_applied, $background_color_applied, $position_applied);
         }
         $html.= sprintf('<p>%s</p>', $this->message);
-        $html.= sprintf('<span id="TrackMessageCookieNotification_Id--close-5644" class="TrackMessageCookieNotification__inline--btn">%s</span>', $accept );
+        $html.= sprintf('<span style="color : %s; background-color: %s;" id="TrackMessageCookieNotification_Id--close-5644" class="TrackMessageCookieNotification__inline--btn">%s</span>',$btn_color_applied, $btn_background_color_applied, $accept );
         $html.= sprintf('</div>');
         echo $html;
     }
