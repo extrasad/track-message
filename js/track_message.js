@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var cookieValue = '1';
   var myDate = new Date();
   var cookieTime = parseInt(phpValues.cookie);
-  //Cookie duration (2 months)
+  //Cookie duration
   myDate.setMonth(myDate.getMonth() + cookieTime);
   //Check if cookie is setted to not reset the cookie.
   var cookie= getCookie("UserFirstTime");
