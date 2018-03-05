@@ -348,18 +348,46 @@ private $message_options;
 
     public function positionOptionsCallback(){
         $options = get_option( 'position_options' );
-        $position_top = 'top: 0;';
-        $position_bottom = 'bottom: 0;';
+        
+        $position_top = 'top: 0; left: 0; right: 0;';
+        $position_block_top_right = 'right: 20px; top: 6%; width: 300px;';
+        $position_block_top_left = 'left: 20px; top: 6%; width: 300px;';
+        
+        $position_bottom = 'bottom: 0; left: 0; right: 0;';
+        $position_block_bottom_right = 'right: 20px; bottom: 6%; width: 300px;';
+        $position_block_bottom_left = 'left: 20px; bottom: 6%; width: 300px;';
+        
         $checked_top = ($options['positions'] == $position_top ?  'checked="checked"' : '' );
+        $checked_block_top_right = ($options['positions'] == $position_block_top_right ?  'checked="checked"' : '' );
+        $checked_block_top_left = ($options['positions'] == $position_block_top_left ?  'checked="checked"' : '' );
+        
         $checked_bottom = ($options['positions'] == $position_bottom ?  'checked="checked"' : '' );
+        $checked_block_bottom_right = ($options['positions'] == $position_block_bottom_right ?  'checked="checked"' : '' );
+        $checked_block_bottom_left = ($options['positions'] == $position_block_bottom_left ?  'checked="checked"' : '' );
+        
         $margin = ('margin: 3px 5px 3px 5px;');
         $type = ('radio');
         $id_top = ('position_top');
-        $id_bot = ('positions_bottom');
+        $id_top_left = ('position_top_left');
+        $id_top_right = ('position_top_right');
+        $id_bot = ('position_bottom');
+        $id_bot_left = ('position_bottom_left');
+        $id_bot_right = ('position_bottom_right');
+        
         $html = sprintf('<input type="%s" id="%s"
         name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_top), esc_attr('position_options[positions]'), esc_attr($position_top), esc_attr($checked_top), esc_attr($margin));
         $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_top),esc_html('Top'));
-        if ($checked_top == false && $checked_bottom == false ){
+
+        $html .= sprintf('<input type="%s" id="%s"
+        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_top_left), esc_attr('position_options[positions]'), esc_attr($position_block_top_left), esc_attr($checked_block_top_left), esc_attr($margin));
+        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_top_left),esc_html('Block Top Left'));
+
+        $html .= sprintf('<input type="%s" id="%s"
+        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_top_right), esc_attr('position_options[positions]'), esc_attr($position_block_top_right), esc_attr($checked_block_top_right), esc_attr($margin));
+        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_top_right),esc_html('Block Top Right'));
+        $html.= '<br>';
+
+        if ($checked_top == false && $checked_bottom == false && $checked_block_bottom_left == false && $checked_block_bottom_right == false && $checked_block_top_left == false && $checked_block_top_right == false ){
             $html .= sprintf('<input type="%s" id="%s"
             name="%s" value="%s" %s style="%s" checked>', esc_attr($type), esc_attr($id_bot), esc_attr('position_options[positions]'), esc_attr($position_bottom), esc_attr($checked_bottom), esc_attr($margin));
             $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot), esc_html('Bottom'));
@@ -368,6 +396,14 @@ private $message_options;
         name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_bot), esc_attr('position_options[positions]'), esc_attr($position_bottom), esc_attr($checked_bottom), esc_attr($margin));
         $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot), esc_html('Bottom'));
         }
+        
+        $html .= sprintf('<input type="%s" id="%s"
+        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_bot_left), esc_attr('position_options[positions]'), esc_attr($position_block_bottom_left), esc_attr($checked_block_bottom_left), esc_attr($margin));
+        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot_left), esc_html('Block Bottom Left'));
+        
+        $html .= sprintf('<input type="%s" id="%s"
+        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_bot_right), esc_attr('position_options[positions]'), esc_attr($position_block_bottom_right), esc_attr($checked_block_bottom_right), esc_attr($margin));
+        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot_right), esc_html('Block Bottom Right'));
         echo $html;
 
     }
