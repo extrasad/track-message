@@ -359,9 +359,15 @@ private $message_options;
         $html = sprintf('<input type="%s" id="%s"
         name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_top), esc_attr('position_options[positions]'), esc_attr($position_top), esc_attr($checked_top), esc_attr($margin));
         $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_top),esc_html('Top'));
+        if ($checked_top == false && $checked_bottom == false ){
+            $html .= sprintf('<input type="%s" id="%s"
+            name="%s" value="%s" %s style="%s" checked>', esc_attr($type), esc_attr($id_bot), esc_attr('position_options[positions]'), esc_attr($position_bottom), esc_attr($checked_bottom), esc_attr($margin));
+            $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot), esc_html('Bottom'));
+        } else {
         $html .= sprintf('<input type="%s" id="%s"
         name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_bot), esc_attr('position_options[positions]'), esc_attr($position_bottom), esc_attr($checked_bottom), esc_attr($margin));
         $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot), esc_html('Bottom'));
+        }
         echo $html;
 
     }
