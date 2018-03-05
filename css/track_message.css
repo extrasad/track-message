@@ -1,14 +1,14 @@
 .TrackMessageNotification__content--opennotification-bottom {
-  animation: openModalBottom 0.5s ease-out forwards; }
+  animation: openMssgBottom 0.5s ease-out forwards; }
 
 .TrackMessageNotification__content--closenotification-bottom {
-  animation: closeModalBottom 1s ease-out forwards; }
+  animation: closeMssgBottom 1s ease-out forwards; }
 
 .TrackMessageNotification__content--opennotification-top {
-  animation: openModalTop 0.5s ease-out forwards; }
+  animation: openMssgTop 0.5s ease-out forwards; }
 
 .TrackMessageNotification__content--closenotification-top {
-  animation: closeModalTop 1s ease-out forwards; }
+  animation: closeMssgTop 1s ease-out forwards; }
 
 .TrackMessageNotification {
   font-size: 14px;
@@ -39,43 +39,31 @@
     .TrackMessageNotification .TrackMessageCookieNotification__inline--btn:hover {
       box-shadow: 0 16px 30px rgba(0, 0, 0, 0.3), 0 10px 10px rgba(0, 0, 0, 0.25); }
 
-@keyframes openModalTop {
+@keyframes openMssgTop {
   0% {
     opacity: 0.4;
     transform: translateY(-100%); }
   100% {
     opacity: 1;
     transform: translateY(0%); } }
-@keyframes closeModalTop {
+@keyframes closeMssgTop {
   0% {
     opacity: 1;
     transform: translateY(0%); }
   100% {
     opacity: 0;
     transform: translateY(-100%); } }
-@keyframes openModalBottom {
+@keyframes openMssgBottom {
   0% {
     opacity: 0.4;
     transform: translateY(100%); }
-  25% {
-    opacity: 0.5;
-    transform: translateY(60%); }
-  50% {
-    opacity: 0.7;
-    transform: translateY(30%); }
-  75% {
-    opacity: 0.9;
-    transform: translateY(10%); }
   100% {
     opacity: 1;
     transform: translateY(0%); } }
-@keyframes closeModalBottom {
+@keyframes closeMssgBottom {
   0% {
     opacity: 1;
     transform: translateY(0%); }
-  50% {
-    opacity: 0.8;
-    transform: translateY(90%); }
   100% {
     opacity: 0;
     transform: translateY(100%); } }
