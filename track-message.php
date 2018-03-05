@@ -141,7 +141,7 @@ private $position_block_bottom_right;
 
     // Custom Message Section
     public function tmssgPluginMenu() {
-        $settings = add_submenu_page(   'options-general.php', 
+        $settings = add_submenu_page('options-general.php', 
                         (esc_html__('Options', 'track-message')), 
                         (esc_html__('Track Message', 'track-message')),
                             'manage_options', 
@@ -152,26 +152,68 @@ private $position_block_bottom_right;
     }
     
     //Plugin content
-    public function tmssgPluginContent() {
-            ?>
+    public function tmssgPluginContent( $active_tab = '') {
+        ?>
         <div class="wrap">
         <h2><?php (esc_html_e('Track Message', 'track-message')); ?></h2>
+        <?php
+            if((isset( $_GET[ 'tab' ] ))){
+                $active_tab = $_GET[ 'tab'];
+            }else {
+                switch($active_tab){
+                    case($active_tab == 'general_options'):
+                        $active_tab = 'general_options';
+                        break;
+                    case($active_tab == 'content_options'):
+                        $active_tab = 'content_options';
+                        break;
+                    case($active_tab == 'styles_options'):
+                        $active_tab = 'styles_options';
+                        break;
+                    case($active_tab == 'policy_options'):
+                        $active_tab = 'policy_options';
+                        break;
+                        }
+                    }
+        ?>
+
+        <h2 class="nav-tab-wrapper">
+            <a href="?page=track_message&tab=general_options" class="nav-tab <?php echo $active_tab == 'general_options' ? 'nav-tab-active' : ''; ?>">General Options</a>
+            <a href="?page=track_message&tab=content_options" class="nav-tab <?php echo $active_tab == 'content_options' ? 'nav-tab-active' : ''; ?>">Content Options</a>
+            <a href="?page=track_message&tab=styles_options" class="nav-tab <?php echo $active_tab == 'styles_options' ? 'nav-tab-active' : ''; ?>">Styles Options</a>
+            <a href="?page=track_message&tab=policy_options" class="nav-tab <?php echo $active_tab == 'policy_options' ? 'nav-tab-active' : ''; ?>">Policy Options</a>
+        </h2>
         <form method="post" action="options.php">
             <?php
-                settings_fields('track_message');
-                do_settings_sections('track_message');
-                submit_button();
+                switch($active_tab){
+                    case($active_tab == 'general_options'):
+                        settings_fields( 'track_message_general' );
+                        do_settings_sections( 'track_message_general' );
+                        break;
+                    case($active_tab == 'content_options'):
+                        settings_fields( 'track_message_content' );
+                        do_settings_sections( 'track_message_content' );
+                        break;
+                    case($active_tab == 'styles_options'):
+                        settings_fields( 'track_message_styles' );
+                        do_settings_sections( 'track_message_styles' );
+                        break;
+                    case($active_tab == 'policy_options'):
+                        settings_fields( 'track_message_policy' );
+                        do_settings_sections( 'track_message_policy' );
+                        break;
+                    } 
+        submit_button();
             ?>
         </form>
         </div>
         <?php
-        }
-
+    }
     // Init settings..    
     public function settingsInit(){
         //Text message
         register_setting( 
-            'track_message', 
+            'track_message_content', 
             'message_field'
         );
         
@@ -179,20 +221,20 @@ private $position_block_bottom_right;
             'message_field',
             (esc_html__('Write the message', 'track-message')), 
             array( $this, 'mssgFieldCallback' ), 
-            'track_message', 'message_section' 
+            'track_message_content', 'message_section' 
         );
 
         add_settings_section( 
             'message_section', 
-            (esc_html__('¡Add a message to notify your visitors!',
+            (esc_html__('Content Settings',
             'track-message')), 
             false, 
-            'track_message' 
+            'track_message_content' 
         );
 
         //Message Time
         register_setting( 
-            'track_message', 
+            'track_message_general', 
             'message_time_settings'
         );
         
@@ -201,19 +243,19 @@ private $position_block_bottom_right;
             (esc_html__('Set message duration on front-page ', 
             'track-message')), 
             array( $this, 'mssgTimeCallback' ), 
-            'track_message', 
+            'track_message_general', 
             'message_time' 
         );
 
         add_settings_section( 
             'message_time', 
-            (esc_html__('','track-message')), 
+            (esc_html__('General settings','track-message')), 
             false, 
-            'track_message' 
+            'track_message_general' 
         );
         //Cookie Time
         register_setting( 
-            'track_message', 
+            'track_message_general', 
             'cookie_time_settings'
         );
         
@@ -222,21 +264,21 @@ private $position_block_bottom_right;
             (esc_html__('Set cookie duration to expire',
             'track-message')), 
             array( $this, 'cookieTimeCallback' ), 
-            'track_message', 
+            'track_message_general', 
             'cookie_time' 
         );
 
         add_settings_section(
             'cookie_time', 
-            (esc_html__('Cookie settings',
+            (esc_html__('',
             'track-message')), 
             false, 
-            'track_message' 
+            'track_message_general' 
         );
 
         //Position - Design
         register_setting(
-            'track_message', 
+            'track_message_styles', 
             'position_options');
 
         add_settings_field(
@@ -244,20 +286,20 @@ private $position_block_bottom_right;
             (esc_html__('Where do you want your message to show up?', 
             'track-message')), 
             array( $this,'positionOptionsCallback'), 
-            'track_message', 
+            'track_message_styles', 
             'position_section'
         );
 
         add_settings_section(
             'position_section', 
-            (esc_html__('Message Position','track-message')), 
+            (esc_html__('Styles Settings','track-message')), 
             false, 
-            'track_message'
+            'track_message_styles'
         );
         
         //Color Picker - Design
         register_setting(
-            'track_message',
+            'track_message_styles',
             'color_options',
             array( $this, 'validateOptions' )
         );
@@ -266,19 +308,19 @@ private $position_block_bottom_right;
             'wp-color-picker-section',
             (esc_html__( 'Choose Your Color', 'track-message' )),
             array( $this, 'optionsSettingsText' ),
-            'track_message'
+            'track_message_styles'
         );
           
         add_settings_field(
             'color',
             (esc_html__( 'Text color', 'track-message'  )),
             array( $this, 'colorInput' ),
-            'track_message',
+            'track_message_styles',
             'wp-color-picker-section'
         );
 
         register_setting(
-            'track_message',
+            'track_message_styles',
             'background_color_options',
             array( $this, 'validateBackgroundOptions' )
         );
@@ -287,13 +329,13 @@ private $position_block_bottom_right;
             'background_color',
             (esc_html__( 'Background Color', 'track-message'  )),
             array( $this, 'backgroundColorInput' ),
-            'track_message',
+            'track_message_styles',
             'wp-color-picker-section'
         );
         //Button color settings
 
         register_setting(
-            'track_message',
+            'track_message_styles',
             'btn_color_options',
             array( $this, 'validateBtnColorOptions' )
         );
@@ -302,12 +344,12 @@ private $position_block_bottom_right;
             'btn_color',
             (esc_html__( 'Button Color', 'track-message'  )),
             array( $this, 'btnColorInput' ),
-            'track_message',
+            'track_message_styles',
             'wp-color-picker-section'
         );
 
         register_setting(
-            'track_message',
+            'track_message_styles',
             'background_btn_color_options',
             array( $this, 'validateBtnBackgroundOptions' )
         );
@@ -316,7 +358,7 @@ private $position_block_bottom_right;
             'background_btn_color',
             (esc_html__( 'Button Background Color', 'track-message'  )),
             array( $this, 'btnBackgroundColorInput' ),
-            'track_message',
+            'track_message_styles',
             'wp-color-picker-section'
         );
     }
