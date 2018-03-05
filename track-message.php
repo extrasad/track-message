@@ -27,6 +27,13 @@ private $cookie_settings;
 private $message_settings;
 private $cookie_options;
 private $message_options;
+private $position_top;
+private $position_block_top_left;
+private $position_block_top_right;
+private $position_bottom;
+private $position_block_bottom_left;
+private $position_block_bottom_right;
+
 
     // Construct Function
     public function __construct(){
@@ -77,6 +84,15 @@ private $message_options;
                         65   =>      __('65 Seconds','track-message'),
                         70   =>      __('70 Seconds','track-message'),                               
         );
+
+        $this->position_top = 'top: 0; left: 0; right: 0;';
+        $this->position_block_top_right = 'right: 20px; top: 6%; width: 300px;';
+        $this->position_block_top_left = 'left: 20px; top: 6%; width: 300px;';
+        
+        $this->position_bottom = 'bottom: 0; left: 0; right: 0;';
+        $this->position_block_bottom_right = 'right: 20px; bottom: 6%; width: 300px;';
+        $this->position_block_bottom_left = 'left: 20px; bottom: 6%; width: 300px;';
+
         add_action( 'wp_enqueue_scripts', array( $this, 'myScripts'));
         add_action( 'admin_menu', array( $this, 'tmssgPluginMenu'));
         add_action( 'admin_init', array( $this, 'settingsInit' ) );
@@ -348,20 +364,54 @@ private $message_options;
 
     public function positionOptionsCallback(){
         $options = get_option( 'position_options' );
-        $position_top = 'top: 0;';
-        $position_bottom = 'bottom: 0;';
-        $checked_top = ($options['positions'] == $position_top ?  'checked="checked"' : '' );
-        $checked_bottom = ($options['positions'] == $position_bottom ?  'checked="checked"' : '' );
+
+        $checked_top = ($options['positions'] == $this->position_top ?  'checked="checked"' : '' );
+        $checked_block_top_right = ($options['positions'] == $this->position_block_top_right ?  'checked="checked"' : '' );
+        $checked_block_top_left = ($options['positions'] == $this->position_block_top_left ?  'checked="checked"' : '' );
+        
+        $checked_bottom = ($options['positions'] == $this->position_bottom ?  'checked="checked"' : '' );
+        $checked_block_bottom_right = ($options['positions'] == $this->position_block_bottom_right ?  'checked="checked"' : '' );
+        $checked_block_bottom_left = ($options['positions'] == $this->position_block_bottom_left ?  'checked="checked"' : '' );
+        
         $margin = ('margin: 3px 5px 3px 5px;');
         $type = ('radio');
         $id_top = ('position_top');
-        $id_bot = ('positions_bottom');
+        $id_top_left = ('position_top_left');
+        $id_top_right = ('position_top_right');
+        $id_bot = ('position_bottom');
+        $id_bot_left = ('position_bottom_left');
+        $id_bot_right = ('position_bottom_right');
+        
         $html = sprintf('<input type="%s" id="%s"
-        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_top), esc_attr('position_options[positions]'), esc_attr($position_top), esc_attr($checked_top), esc_attr($margin));
+        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_top), esc_attr('position_options[positions]'), esc_attr($this->position_top), esc_attr($checked_top), esc_attr($margin));
         $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_top),esc_html('Top'));
+
         $html .= sprintf('<input type="%s" id="%s"
-        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_bot), esc_attr('position_options[positions]'), esc_attr($position_bottom), esc_attr($checked_bottom), esc_attr($margin));
+        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_top_left), esc_attr('position_options[positions]'), esc_attr($this->position_block_top_left), esc_attr($checked_block_top_left), esc_attr($margin));
+        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_top_left),esc_html('Block Top Left'));
+
+        $html .= sprintf('<input type="%s" id="%s"
+        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_top_right), esc_attr('position_options[positions]'), esc_attr($this->position_block_top_right), esc_attr($checked_block_top_right), esc_attr($margin));
+        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_top_right),esc_html('Block Top Right'));
+        $html.= '<br>';
+
+        if ($checked_top == false && $checked_bottom == false && $checked_block_bottom_left == false && $checked_block_bottom_right == false && $checked_block_top_left == false && $checked_block_top_right == false ){
+            $html .= sprintf('<input type="%s" id="%s"
+            name="%s" value="%s" %s style="%s" checked>', esc_attr($type), esc_attr($id_bot), esc_attr('position_options[positions]'), esc_attr($this->position_bottom), esc_attr($checked_bottom), esc_attr($margin));
+            $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot), esc_html('Bottom'));
+        } else {
+        $html .= sprintf('<input type="%s" id="%s"
+        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_bot), esc_attr('position_options[positions]'), esc_attr($this->position_bottom), esc_attr($checked_bottom), esc_attr($margin));
         $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot), esc_html('Bottom'));
+        }
+        
+        $html .= sprintf('<input type="%s" id="%s"
+        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_bot_left), esc_attr('position_options[positions]'), esc_attr($this->position_block_bottom_left), esc_attr($checked_block_bottom_left), esc_attr($margin));
+        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot_left), esc_html('Block Bottom Left'));
+        
+        $html .= sprintf('<input type="%s" id="%s"
+        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_bot_right), esc_attr('position_options[positions]'), esc_attr($this->position_block_bottom_right), esc_attr($checked_block_bottom_right), esc_attr($margin));
+        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot_right), esc_html('Block Bottom Right'));
         echo $html;
 
     }
@@ -462,7 +512,7 @@ private $message_options;
         $class_bot = ('TrackMessageNotification TrackMessageNotification__content--opennotification-bottom');
         $accept = esc_html__('Accept', 'track-message');
         
-        if ($position_applied == 'top: 0;'){
+        if ($position_applied == $this->position_top){
             $html = sprintf('<div style="%s %s %s" id="%s" class="%s">', esc_attr($color_applied), esc_attr($background_color_applied), esc_attr($position_applied), esc_attr($id), esc_attr($class_top));
         } else {
             $html = sprintf('<div style="%s %s %s" id="%s" class="%s">', esc_attr($color_applied), esc_attr($background_color_applied), esc_attr($position_applied), esc_attr($id), esc_attr($class_bot));

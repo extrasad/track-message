@@ -18,7 +18,7 @@ WP plugin for a customizable track message.
 - [X] Save button 
 - [] Multilingual functionality for admin area, Edit just the front-end message with WPML
 - [] Add selector to choose the way the message will close (tmied, scroll, close) if user doesn't accepts cookie policy message the message will continue appearing
-- [] Add more positions for message
+- [X] Add more positions for message
 - [] Add cookie version input to reset cookie if user change version of cookie
 - [] Read more link 
 - [] Add more front-end assets 
