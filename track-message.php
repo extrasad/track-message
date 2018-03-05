@@ -40,7 +40,7 @@ private $position_block_bottom_right;
 
         $plugin = plugin_basename( __FILE__ );
         $options = get_option('message_field');
-        $this->message = esc_html( $options != "" ) ? sanitize_text_field($options) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
+        $this->message = ( $options != "" ) ? sanitize_text_field($options) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
         $this->message_options = get_option('message_time_settings');
         $this->cookie_options = get_option('cookie_time_settings');
         $this->cookie_settings=array(
@@ -365,6 +365,8 @@ private $position_block_bottom_right;
        
     // Callbacks Functions.  
     public function cookieTimeCallback() {
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
         $html = sprintf('<select name="%s">', esc_attr('cookie_time_settings[cookie_time]'));
         foreach($this->cookie_settings as $key => $value)
         {
@@ -375,20 +377,24 @@ private $position_block_bottom_right;
             }
         }   
         $html .= ('</select>');
-
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
         echo $html;  
     }
 
     public function mssgFieldCallback() {
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
         $style = ('width: 70%;');       
         $html = sprintf('<textarea name="%s" id="%s" style="%s"',esc_attr('message_field'), esc_attr('message_field'), esc_attr($style));
-        $html.= sprintf('type="text">%s</textarea>', esc_html__($this->message));
-
+        $html.= sprintf('type="text">%s</textarea>', esc_html__($this->message, 'track-message'));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
 
         echo $html;
     }    
 
     public function mssgTimeCallback() {
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
         $html = sprintf('<select name="%s">', esc_attr('message_time_settings[message_time]'));
         foreach($this->message_settings as $key => $value)
         {
@@ -399,12 +405,14 @@ private $position_block_bottom_right;
             }
         }
         $html .= ('</select>');
-
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
         echo $html;    
     }
 
 
     public function positionOptionsCallback(){
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
         $options = get_option( 'position_options' );
 
         $checked_top = ($options['positions'] == $this->position_top ?  'checked="checked"' : '' );
@@ -454,6 +462,7 @@ private $position_block_bottom_right;
         $html .= sprintf('<input type="%s" id="%s"
         name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_bot_right), esc_attr('position_options[positions]'), esc_attr($this->position_block_bottom_right), esc_attr($checked_block_bottom_right), esc_attr($margin));
         $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot_right), esc_html('Block Bottom Right'));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
         echo $html;
 
     }
@@ -467,11 +476,14 @@ private $position_block_bottom_right;
        * Display our color field as a text input field.
        */
     public function colorInput(){
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class_paragraph = ('description');
         $options = get_option( 'color_options' );
         $color = ( $options['color'] != "" ) ? sanitize_text_field( $options['color'] ) : '#000000';
         $class = ('TrackMessageNotification__content--edit-color');
         
         $html = sprintf('<input class="%s" name="%s" type="%s" value="'. esc_html($color) .'" />', esc_attr($class), esc_attr('color_options[color]'), esc_attr('text'));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class_paragraph), esc_html($text));
         echo $html;
     }
 
@@ -483,6 +495,8 @@ private $position_block_bottom_right;
     }
 
     public function backgroundColorInput(){
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class_paragraph = ('description');
         $options = get_option( 'background_color_options' );
         $color = ( $options['background_color'] != "" ) ? sanitize_text_field( $options['background_color'] ) : '#ffffff';
         $class = ('TrackMessageNotification__content--edit-color');
@@ -490,6 +504,7 @@ private $position_block_bottom_right;
         $type = ('text');
         
         $html = sprintf('<input class="%s" name="%s" type="%s" value="'. esc_attr($color) .'" />', esc_attr($class), esc_attr($name), esc_attr($type));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class_paragraph), esc_html($text));
         echo $html;
     }
 
@@ -501,12 +516,15 @@ private $position_block_bottom_right;
     }
      // Button Color settings
     public function btnColorInput(){
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class_paragraph = ('description');
         $options = get_option( 'btn_color_options' );
         $color = ( $options['btn_color'] != "" ) ? sanitize_text_field( $options['btn_color'] ) : '#000000';
         $class = ('TrackMessageNotification__content--edit-color');
         $name = ('btn_color_options[btn_color]');
         $type = ('text');
         $html = sprintf('<input class="%s" name="%s" type="%s" value="'. esc_attr($color) .'" />', esc_attr($class), esc_attr($name), esc_attr($type));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class_paragraph), esc_html($text));
         echo $html;
     }
 
@@ -518,6 +536,8 @@ private $position_block_bottom_right;
     }
 
     public function btnBackgroundColorInput(){
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class_paragraph = ('description');
         $options = get_option( 'background_btn_color_options' );
         $color = ( $options['background_btn_color'] != "" ) ? sanitize_text_field( $options['background_btn_color'] ) : '#ffffff';
         $class = ('TrackMessageNotification__content--edit-color');
@@ -525,6 +545,7 @@ private $position_block_bottom_right;
         $type = ('text');
         
         $html = sprintf('<input class="%s" name="%s" type="%s" value="'. esc_attr($color) .'" />', esc_attr($class), esc_attr($name), esc_attr($type));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class_paragraph), esc_html($text));
         echo $html;
     }
 
