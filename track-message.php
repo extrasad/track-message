@@ -219,15 +219,15 @@ private $position_block_bottom_right;
         
         add_settings_field( 
             'message_field',
-            (esc_html__('Write the message', 'track-message')), 
+            __('Write the message', 'track-message'), 
             array( $this, 'mssgFieldCallback' ), 
             'track_message_content', 'message_section' 
         );
 
         add_settings_section( 
             'message_section', 
-            (esc_html__('Content Settings',
-            'track-message')), 
+            __('Content Settings',
+            'track-message'), 
             false, 
             'track_message_content' 
         );
@@ -240,8 +240,8 @@ private $position_block_bottom_right;
         
         add_settings_field( 
             'message_time',
-            (esc_html__('Set message duration on front-page ', 
-            'track-message')), 
+            __('Set message duration on front-page ', 
+            'track-message'), 
             array( $this, 'mssgTimeCallback' ), 
             'track_message_general', 
             'message_time' 
@@ -249,7 +249,7 @@ private $position_block_bottom_right;
 
         add_settings_section( 
             'message_time', 
-            (esc_html__('General settings','track-message')), 
+            __('General settings','track-message'), 
             false, 
             'track_message_general' 
         );
@@ -261,8 +261,8 @@ private $position_block_bottom_right;
         
         add_settings_field(
             'cookie_time', 
-            (esc_html__('Set cookie duration to expire',
-            'track-message')), 
+            __('Set cookie duration to expire',
+            'track-message'), 
             array( $this, 'cookieTimeCallback' ), 
             'track_message_general', 
             'cookie_time' 
@@ -270,8 +270,8 @@ private $position_block_bottom_right;
 
         add_settings_section(
             'cookie_time', 
-            (esc_html__('',
-            'track-message')), 
+            __('',
+            'track-message'), 
             false, 
             'track_message_general' 
         );
@@ -283,8 +283,8 @@ private $position_block_bottom_right;
 
         add_settings_field(
             'positions', 
-            (esc_html__('Where do you want your message to show up?', 
-            'track-message')), 
+            __('Where do you want your message to show up?', 
+            'track-message'), 
             array( $this,'positionOptionsCallback'), 
             'track_message_styles', 
             'position_section'
@@ -292,7 +292,7 @@ private $position_block_bottom_right;
 
         add_settings_section(
             'position_section', 
-            (esc_html__('Styles Settings','track-message')), 
+            __('Styles Settings','track-message'), 
             false, 
             'track_message_styles'
         );
@@ -306,14 +306,14 @@ private $position_block_bottom_right;
           
         add_settings_section(
             'wp-color-picker-section',
-            (esc_html__( 'Choose Your Color', 'track-message' )),
+            __( 'Choose Your Color', 'track-message' ),
             array( $this, 'optionsSettingsText' ),
             'track_message_styles'
         );
           
         add_settings_field(
             'color',
-            (esc_html__( 'Text color', 'track-message'  )),
+            __( 'Text color', 'track-message'  ),
             array( $this, 'colorInput' ),
             'track_message_styles',
             'wp-color-picker-section'
@@ -327,7 +327,7 @@ private $position_block_bottom_right;
           
         add_settings_field(
             'background_color',
-            (esc_html__( 'Background Color', 'track-message'  )),
+            __( 'Background Color', 'track-message'  ),
             array( $this, 'backgroundColorInput' ),
             'track_message_styles',
             'wp-color-picker-section'
@@ -342,7 +342,7 @@ private $position_block_bottom_right;
           
         add_settings_field(
             'btn_color',
-            (esc_html__( 'Button Color', 'track-message'  )),
+            __( 'Button Color', 'track-message'  ),
             array( $this, 'btnColorInput' ),
             'track_message_styles',
             'wp-color-picker-section'
@@ -356,7 +356,7 @@ private $position_block_bottom_right;
           
         add_settings_field(
             'background_btn_color',
-            (esc_html__( 'Button Background Color', 'track-message'  )),
+            __( 'Button Background Color', 'track-message'  ),
             array( $this, 'btnBackgroundColorInput' ),
             'track_message_styles',
             'wp-color-picker-section'
