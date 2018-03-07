@@ -35,6 +35,7 @@ private $position_block_bottom_left;
 private $position_block_bottom_right;
 private $close_settings;
 private $close_options;
+private $scroll_options;
 
 
     // Construct Function
@@ -46,6 +47,7 @@ private $close_options;
         $this->message_options = get_option('message_time_settings');
         $this->cookie_options = get_option('cookie_time_settings');
         $this->close_options = get_option('close_settings');
+        $this->scroll_options = get_option('scroll_distance');
         $this->cookie_settings=array(
                         1   =>      __('1 Month','track-message'),
                         2   =>      __('2 Months','track-message'),
@@ -130,7 +132,8 @@ private $close_options;
         $js_settings = array(
             'cookie' => $this->cookie_options['cookie_time'],
             'message' => $this->message_options['message_time'],
-            'close' => $this->close_options['close_settings']
+            'close' => $this->close_options['close_settings'],
+            'scrollDistance' => $this->scroll_options['scroll_distance']
         );
       
         
@@ -242,7 +245,7 @@ private $close_options;
             false, 
             'track_message_content' 
         );
-        //Message Time
+        //Close Settings
         register_setting( 
             'track_message_general', 
             'close_settings'
@@ -260,6 +263,27 @@ private $close_options;
         add_settings_section( 
             'close_settings', 
             __('General settings','track-message'), 
+            false, 
+            'track_message_general' 
+        );
+        //Scroll distance
+        register_setting( 
+            'track_message_general', 
+            'scroll_distance'
+        );
+        
+        add_settings_field( 
+            'scroll_distance',
+            __('Scroll Distance ', 
+            'track-message'), 
+            array( $this, 'scrollDistanceCallback' ), 
+            'track_message_general', 
+            'scroll_distance' 
+        );
+
+        add_settings_section( 
+            'scroll_distance', 
+            '', 
             false, 
             'track_message_general' 
         );
@@ -411,7 +435,20 @@ private $close_options;
         $html .= ('</select>');
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
         echo $html;      
-    }  
+    }
+    public function scrollDistanceCallback() {
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+        $type = ('number');
+        $min = 1;
+        $value =($this->scroll_options['scroll_distance']); 
+        $name = ('scroll_distance[scroll_distance]');      
+        $html = sprintf('<input type="%s" min="%d" name="%s" value="%s">',esc_attr($type), esc_attr($min), esc_attr($name), esc_attr($value));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+
+        echo $html;
+    }
+
     public function cookieTimeCallback() {
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
