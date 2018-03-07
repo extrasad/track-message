@@ -2,6 +2,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
   const element = document.getElementById("TrackMessageCookieNotification_Id--3455");
   const close = document.getElementById("TrackMessageCookieNotification_Id--close-5644");
 
+  const initClasses = function() {
+    element.classList.add('TrackMessageNotification');
+  }
+  const rmClass = function(){
+    element.style.removeProperty('display');
+  }
+
+
   const trackMssgPosition = function(){
     switch (positionSettings.mssgPosition) { 
       case 'position_top': 
@@ -118,6 +126,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }    
   }
 
+  const loadAssets = function(){
+    rmClass();
+    initClasses();
+    trackMssgPosition();
+    openTrackMssg();
+  }
+
 
   // Getting the cookie value if is setted
   var getCookie =function(name){
@@ -152,13 +167,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     setCookie()
   }, messageTime*1000);
 
+  loadAssets();
   close.addEventListener('click', closeTrackMssg, false);
   close.addEventListener('click', setCookie, false);
-  element.addEventListener('DOMContentLoaded', openTrackMssg, false );
-  element.addEventListener('DOMContentLoaded', trackMssgPosition, false );
-  window.addEventListener('beforeunload', setCookie, false);
-  
-  
+  window.addEventListener('beforeunload', setCookie, false);  
 });
 
 

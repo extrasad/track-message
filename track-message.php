@@ -638,10 +638,10 @@ private $close_view_settings;
         $id_button = ('TrackMessageCookieNotification_Id--close-5644');
         $class_button = ('TrackMessageCookieNotification__inline--btn');
         $id = ('TrackMessageCookieNotification_Id--3455');
-        $class = ('TrackMessageNotification');
+        $ready_to_js = ('display: none;');
         
         $accept = esc_html__('Accept', 'track-message');
-        $html = sprintf('<div style="%s %s" id="%s" class="%s">', esc_attr($color_applied), esc_attr($background_color_applied), esc_attr($id), esc_attr($class));
+        $html = sprintf('<div style="%s %s %s" id="%s">', esc_attr($color_applied), esc_attr($background_color_applied), esc_attr($ready_to_js), esc_attr($id));
         $html.= sprintf('<p>%s</p>', esc_html__($this->message,'track-message'));
         $html.= sprintf('<span style="%s %s" id="%s" class="%s">%s</span>', esc_attr($btn_color_applied), esc_attr($btn_background_color_applied), esc_attr($id_button), esc_attr($class_button), esc_html($accept));
         $html.= sprintf('</div>');
