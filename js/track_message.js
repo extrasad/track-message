@@ -31,21 +31,51 @@ document.addEventListener("DOMContentLoaded", function(event) {
     if (!cookie  == '1'){
       document.cookie = cookieName +"=" + cookieValue + ";expires=" + myDate 
       + ";path=/";
+      }else{
+        window.removeEventListener('scroll', closeSettings, false);
       }
 
-    };
+  };
   // Time duration of the message in the page.
-  var messageTime = parseInt(phpValues.message);
-  var setTime = setTimeout(function(messageTime) {
-    closeTrackMssg()
-    setCookie()
-  }, messageTime*1000);
 
+  var closeOption = phpValues.close;
+  var closeSettings = function(){
+      switch(closeOption){
+        case('scroll'):
+          scrollTop = window.pageYOffset
+          console.log('im a windown no listener' + scrollTop);
+            if(scrollTop >= 300 ){
+              closeTrackMssg()
+              setCookie()
+              window.removeEventListener('scroll', closeSettings, false);
+            }
+        break;
+        case('click'):
+          window.removeEventListener('scroll', closeSettings, false);
+          close.addEventListener('click', closeTrackMssg, false);
+          close.addEventListener('click', setCookie, false);
+          console.log('Im a click');
+        break;
+        case('time'):
+          window.removeEventListener('scroll', closeSettings, false);
+          var messageTime = parseInt(phpValues.message);
+          var setTime = setTimeout(function(messageTime) {
+            closeTrackMssg()
+            setCookie()
+          }, messageTime*1000);
+          console.log('Im a time');
+        break;      
+      }
+  };
+
+  
+  //closeSettings();
+
+  window.addEventListener('scroll', closeSettings , false);
   close.addEventListener('click', closeTrackMssg, false);
   close.addEventListener('click', setCookie, false);
   window.addEventListener('beforeunload', setCookie, false);
-  
-  
+ 
 });
 
 
