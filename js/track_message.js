@@ -2,13 +2,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
   const element = document.getElementById("TrackMessageCookieNotification_Id--3455");
   const close = document.getElementById("TrackMessageCookieNotification_Id--close-5644");
 
+  // Gives the necessary styles so the message looks elegant
+
   const initClasses = function() {
     element.classList.add('TrackMessageNotification');
   }
+
+  // Remove the display inline style in the TrackMessage main div to load all assets from javascript at once
+
   const rmClass = function(){
     element.style.removeProperty('display');
   }
 
+  // Selects the message Position
 
   const trackMssgPosition = function(){
     switch (positionSettings.mssgPosition) { 
@@ -33,7 +39,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }
 
 
-  	// OPEN MESSAGE CONTAINER
+    // Open the message depending on the position and effect selected adding a class to the main div of the message
+    
   const openTrackMssg = function(){
     switch (true) { 
       case (openViewSettings.openView === 'fade'): 
@@ -80,10 +87,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }    
   }
 
-  const closeTrackMssg = function(){
+
+  // Close the message depending on the position and effect selected and remove de previous open effect class
+
+  const closeTrackMssg = function() {
+    if (element.className.includes('opennotification')) {
+      var openClass = Array.from(element.classList).filter(function(openClass) {
+        return openClass.includes('opennotification');
+      })[0];
+      element.classList.remove(openClass);
+    }
     switch (true) { 
       case (closeViewSettings.closeView === 'fade'): 
-        element.classList.add('TrackMessageNotification__content_fade--closenotification') 
+        element.classList.add('TrackMessageNotification__content_fade--closenotification')
         break 
       case (closeViewSettings.closeView === 'fade-slide' && positionSettings.mssgPosition == 'position_top' ): 
         element.classList.add('TrackMessageNotification__content_fade-slide--closenotification-top')
@@ -126,6 +142,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }    
   }
 
+  // Load all the functions and styles to show up the message
   const loadAssets = function(){
     rmClass();
     initClasses();
@@ -167,6 +184,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     setCookie()
   }, messageTime*1000);
 
+
+  // Events and functions triggers
+  
   loadAssets();
   close.addEventListener('click', closeTrackMssg, false);
   close.addEventListener('click', setCookie, false);
