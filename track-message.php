@@ -27,12 +27,15 @@ private $cookie_settings;
 private $message_settings;
 private $cookie_options;
 private $message_options;
-private $position_top;
-private $position_block_top_left;
-private $position_block_top_right;
-private $position_bottom;
-private $position_block_bottom_left;
-private $position_block_bottom_right;
+private $position_options;
+private $position_settings;
+private $open_view_options;
+private $open_view_settings;
+private $close_view_options;
+private $close_view_settings;
+private $close_settings;
+private $close_options;
+private $scroll_options;
 
 
     // Construct Function
@@ -43,6 +46,8 @@ private $position_block_bottom_right;
         $this->message = ( $options != "" ) ? sanitize_text_field($options) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
         $this->message_options = get_option('message_time_settings');
         $this->cookie_options = get_option('cookie_time_settings');
+        $this->close_options = get_option('close_settings');
+        $this->scroll_options = get_option('scroll_distance');
         $this->cookie_settings=array(
                         1   =>      __('1 Month','track-message'),
                         2   =>      __('2 Months','track-message'),
@@ -84,14 +89,45 @@ private $position_block_bottom_right;
                         65   =>      __('65 Seconds','track-message'),
                         70   =>      __('70 Seconds','track-message'),                               
         );
+        $this->close_settings = array(
 
-        $this->position_top = 'top: 0; left: 0; right: 0;';
-        $this->position_block_top_right = 'right: 20px; top: 6%; width: 300px;';
-        $this->position_block_top_left = 'left: 20px; top: 6%; width: 300px;';
+                        'time' =>   __('Timer', 'track-message'),
+                        'scroll' =>  __('Scroll', 'track-message'),
+                        'click' =>  __('Click', 'track-message'),
+
+
+        );
+
+        $this->position_options = get_option('position_options');
+
+        $this->position_settings = array(
+        'position_top'                      => __('Top', 'track-message'),
+        'position_block_top_right'          => __('Block Top Right', 'track-message'),
+        'position_block_top_left'           => __('Block Top Left', 'track-message'),
+        'position_bottom'                   => __('Bottom','track-message'),
+        'position_block_bottom_right'       => __('Block Bottom Right', 'track-message'),
+        'position_block_bottom_left'        => __('Block Bottom Left', 'track-message')
+        );
+
         
-        $this->position_bottom = 'bottom: 0; left: 0; right: 0;';
-        $this->position_block_bottom_right = 'right: 20px; bottom: 6%; width: 300px;';
-        $this->position_block_bottom_left = 'left: 20px; bottom: 6%; width: 300px;';
+
+        $this->open_view_options = get_option('open_view_options');
+
+        $this->open_view_settings = array(
+			'none'	 			=> __( 'None', 'track-message' ),
+			'fade'	 			=> __( 'Fade', 'track-message' ),
+            'slide'	 			=> __( 'Slide', 'track-message' ),
+            'fade-slide'	 	=> __( 'Fade & Slide', 'track-message' )
+        );
+        
+        $this->close_view_options = get_option('close_view_options');
+
+        $this->close_view_settings = array(
+			'none'	 			=> __( 'None', 'track-message' ),
+			'fade'	 			=> __( 'Fade', 'track-message' ),
+            'slide'	 			=> __( 'Slide', 'track-message' ),
+            'fade-slide'	 	=> __( 'Fade & Slide', 'track-message' )
+		);
 
         add_action( 'wp_enqueue_scripts', array( $this, 'myScripts'));
         add_action( 'admin_menu', array( $this, 'tmssgPluginMenu'));
@@ -101,7 +137,6 @@ private $position_block_bottom_right;
         if( !isset( $_COOKIE["UserFirstTime"])){
             add_action('wp_head', array( $this, 'tmssgShowMessage'));
         } 
-  
     }
 
     // Main menu link
@@ -119,9 +154,22 @@ private $position_block_bottom_right;
         $url_plugin_css  =   ($plugin_dir.'css/');
         $js_settings = array(
             'cookie' => $this->cookie_options['cookie_time'],
-            'message' => $this->message_options['message_time']
+            'message' => $this->message_options['message_time'],
+            'close' => $this->close_options['close_settings'],
+            'scrollDistance' => $this->scroll_options['scroll_distance']
         );
-      
+        $opening_view_settings = array(
+            'openView' => $this->open_view_options['open_view']
+        );
+        $closing_view_settings = array(
+            'closeView' => $this->close_view_options['close_view']
+        );
+        $positioning_settings =array(
+            'mssgPosition' => $this->position_options['positions']
+        );
+        
+        
+
         
         if (is_admin()){
             wp_register_script('tmssg_custom_js', $url_plugin_js . 'settings.js');
@@ -136,6 +184,9 @@ private $position_block_bottom_right;
             wp_enqueue_script('tmssg_js');
         }
         wp_localize_script('tmssg_js', 'phpValues', $js_settings);
+        wp_localize_script('tmssg_js', 'openViewSettings', $opening_view_settings);
+        wp_localize_script('tmssg_js', 'closeViewSettings', $closing_view_settings);
+        wp_localize_script('tmssg_js', 'positionSettings', $positioning_settings);
     }
   
 
@@ -231,6 +282,48 @@ private $position_block_bottom_right;
             false, 
             'track_message_content' 
         );
+        //Close Settings
+        register_setting( 
+            'track_message_general', 
+            'close_settings'
+        );
+        
+        add_settings_field( 
+            'close_settings',
+            __('Close ', 
+            'track-message'), 
+            array( $this, 'closeCallback' ), 
+            'track_message_general', 
+            'close_settings' 
+        );
+
+        add_settings_section( 
+            'close_settings', 
+            __('General settings','track-message'), 
+            false, 
+            'track_message_general' 
+        );
+        //Scroll distance
+        register_setting( 
+            'track_message_general', 
+            'scroll_distance'
+        );
+        
+        add_settings_field( 
+            'scroll_distance',
+            __('Scroll Distance ', 
+            'track-message'), 
+            array( $this, 'scrollDistanceCallback' ), 
+            'track_message_general', 
+            'scroll_distance' 
+        );
+
+        add_settings_section( 
+            'scroll_distance', 
+            '', 
+            false, 
+            'track_message_general' 
+        );
 
         //Message Time
         register_setting( 
@@ -249,7 +342,7 @@ private $position_block_bottom_right;
 
         add_settings_section( 
             'message_time', 
-            __('General settings','track-message'), 
+            '', 
             false, 
             'track_message_general' 
         );
@@ -296,7 +389,45 @@ private $position_block_bottom_right;
             false, 
             'track_message_styles'
         );
-        
+
+        //View - Design
+
+        // Open View
+        register_setting(
+            'track_message_styles', 
+            'open_view_options');
+
+        add_settings_field(
+            'open_view', 
+            __('How do you want the message to show up?', 
+            'track-message'), 
+            array( $this,'openView'), 
+            'track_message_styles', 
+            'view_section'
+        );
+
+        add_settings_section(
+            'view_section', 
+            __('View Settings','track-message'), 
+            false, 
+            'track_message_styles'
+        );
+
+        // Close View
+        register_setting(
+            'track_message_styles', 
+            'close_view_options');
+
+        add_settings_field(
+            'close_view', 
+            __('How do you want the message to be closed?', 
+            'track-message'), 
+            array( $this,'closeView'), 
+            'track_message_styles', 
+            'view_section'
+        );
+     
+
         //Color Picker - Design
         register_setting(
             'track_message_styles',
@@ -363,7 +494,36 @@ private $position_block_bottom_right;
         );
     }
        
-    // Callbacks Functions.  
+    // Callbacks Functions.
+    public function closeCallback(){
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+        $html = sprintf('<select name="%s">', esc_attr('close_settings[close_settings]'));
+        foreach($this->close_settings as $key => $value)
+        {
+            if(!isset($this->close_options['close_settings']) && $key == 'time'){
+                $html .= sprintf('<option value="%s" %s>%s</option>', esc_attr($key), esc_attr('selected'), esc_html($value));  
+            }else{
+            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->close_options['close_settings']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
+            }
+        }   
+        $html .= ('</select>');
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+        echo $html;      
+    }
+    public function scrollDistanceCallback() {
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+        $type = ('number');
+        $min = 1;
+        $value =($this->scroll_options['scroll_distance']); 
+        $name = ('scroll_distance[scroll_distance]');      
+        $html = sprintf('<input type="%s" min="%d" name="%s" value="%s">',esc_attr($type), esc_attr($min), esc_attr($name), esc_attr($value));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+
+        echo $html;
+    }
+
     public function cookieTimeCallback() {
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
@@ -413,58 +573,52 @@ private $position_block_bottom_right;
     public function positionOptionsCallback(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
-        $options = get_option( 'position_options' );
-
-        $checked_top = ($options['positions'] == $this->position_top ?  'checked="checked"' : '' );
-        $checked_block_top_right = ($options['positions'] == $this->position_block_top_right ?  'checked="checked"' : '' );
-        $checked_block_top_left = ($options['positions'] == $this->position_block_top_left ?  'checked="checked"' : '' );
-        
-        $checked_bottom = ($options['positions'] == $this->position_bottom ?  'checked="checked"' : '' );
-        $checked_block_bottom_right = ($options['positions'] == $this->position_block_bottom_right ?  'checked="checked"' : '' );
-        $checked_block_bottom_left = ($options['positions'] == $this->position_block_bottom_left ?  'checked="checked"' : '' );
-        
-        $margin = ('margin: 3px 5px 3px 5px;');
-        $type = ('radio');
-        $id_top = ('position_top');
-        $id_top_left = ('position_top_left');
-        $id_top_right = ('position_top_right');
-        $id_bot = ('position_bottom');
-        $id_bot_left = ('position_bottom_left');
-        $id_bot_right = ('position_bottom_right');
-        
-        $html = sprintf('<input type="%s" id="%s"
-        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_top), esc_attr('position_options[positions]'), esc_attr($this->position_top), esc_attr($checked_top), esc_attr($margin));
-        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_top),esc_html('Top'));
-
-        $html .= sprintf('<input type="%s" id="%s"
-        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_top_left), esc_attr('position_options[positions]'), esc_attr($this->position_block_top_left), esc_attr($checked_block_top_left), esc_attr($margin));
-        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_top_left),esc_html('Block Top Left'));
-
-        $html .= sprintf('<input type="%s" id="%s"
-        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_top_right), esc_attr('position_options[positions]'), esc_attr($this->position_block_top_right), esc_attr($checked_block_top_right), esc_attr($margin));
-        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_top_right),esc_html('Block Top Right'));
-        $html.= '<br>';
-
-        if ($checked_top == false && $checked_bottom == false && $checked_block_bottom_left == false && $checked_block_bottom_right == false && $checked_block_top_left == false && $checked_block_top_right == false ){
-            $html .= sprintf('<input type="%s" id="%s"
-            name="%s" value="%s" %s style="%s" checked>', esc_attr($type), esc_attr($id_bot), esc_attr('position_options[positions]'), esc_attr($this->position_bottom), esc_attr($checked_bottom), esc_attr($margin));
-            $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot), esc_html('Bottom'));
-        } else {
-        $html .= sprintf('<input type="%s" id="%s"
-        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_bot), esc_attr('position_options[positions]'), esc_attr($this->position_bottom), esc_attr($checked_bottom), esc_attr($margin));
-        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot), esc_html('Bottom'));
+        $html = sprintf('<select name="%s">', esc_attr('position_options[positions]'));
+        foreach($this->position_settings as $key => $value)
+        {
+            if(!isset($this->position_options['positions']) && $key == 'position_bottom'){
+                $html .= sprintf('<option value="%s" %s>%s</option>', esc_attr($key), esc_attr('selected'), esc_html($value));  
+            }else{
+            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->position_options['positions']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
+            }
         }
-        
-        $html .= sprintf('<input type="%s" id="%s"
-        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_bot_left), esc_attr('position_options[positions]'), esc_attr($this->position_block_bottom_left), esc_attr($checked_block_bottom_left), esc_attr($margin));
-        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot_left), esc_html('Block Bottom Left'));
-        
-        $html .= sprintf('<input type="%s" id="%s"
-        name="%s" value="%s" %s style="%s">', esc_attr($type), esc_attr($id_bot_right), esc_attr('position_options[positions]'), esc_attr($this->position_block_bottom_right), esc_attr($checked_block_bottom_right), esc_attr($margin));
-        $html .= sprintf('<label for="%s">%s</label>', esc_attr($id_bot_right), esc_html('Block Bottom Right'));
+        $html .= ('</select>');
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
-        echo $html;
+        echo $html;   
+    }
 
+    public function openView(){
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+        $html = sprintf('<select name="%s">', esc_attr('open_view_options[open_view]'));
+        foreach($this->open_view_settings as $key => $value)
+        {
+            if(!isset($this->open_view_options['open_view']) && $key == 'none'){
+                $html .= sprintf('<option value="%s" %s>%s</option>', esc_attr($key), esc_attr('selected'), esc_html($value));  
+            }else{
+            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->open_view_options['open_view']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
+            }
+        }
+        $html .= ('</select>');
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+        echo $html;    
+    }
+
+    public function closeView(){
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+        $html = sprintf('<select name="%s">', esc_attr('close_view_options[close_view]'));
+        foreach($this->close_view_settings as $key => $value)
+        {
+            if(!isset($this->close_view_options['close_view']) && $key == 'none'){
+                $html .= sprintf('<option value="%s" %s>%s</option>', esc_attr($key), esc_attr('selected'), esc_html($value));  
+            }else{
+            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->close_view_options['close_view']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
+            }
+        }
+        $html .= ('</select>');
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+        echo $html;     
     }
 
     
@@ -559,7 +713,6 @@ private $position_block_bottom_right;
     // Show the message.
     public function tmssgShowMessage(){
         $color = get_option('color_options');
-        $position = get_option('position_options');
         $background_color = get_option('background_color_options');
         $btn_color = get_option('btn_color_options');
         $btn_background_color = get_option('background_btn_color_options');
@@ -567,19 +720,13 @@ private $position_block_bottom_right;
         $btn_background_color_applied = ('background-color :'.$btn_background_color['background_btn_color'].';');
         $background_color_applied = ('background-color :'.$background_color['background_color'].';');
         $color_applied = ('color :'.$color['color'].';');
-        $position_applied = $position['positions'];
         $id_button = ('TrackMessageCookieNotification_Id--close-5644');
         $class_button = ('TrackMessageCookieNotification__inline--btn');
         $id = ('TrackMessageCookieNotification_Id--3455');
-        $class_top = ('TrackMessageNotification TrackMessageNotification__content--opennotification-top');
-        $class_bot = ('TrackMessageNotification TrackMessageNotification__content--opennotification-bottom');
-        $accept = esc_html__('Accept', 'track-message');
+        $ready_to_js = ('display: none;');
         
-        if ($position_applied == $this->position_top){
-            $html = sprintf('<div style="%s %s %s" id="%s" class="%s">', esc_attr($color_applied), esc_attr($background_color_applied), esc_attr($position_applied), esc_attr($id), esc_attr($class_top));
-        } else {
-            $html = sprintf('<div style="%s %s %s" id="%s" class="%s">', esc_attr($color_applied), esc_attr($background_color_applied), esc_attr($position_applied), esc_attr($id), esc_attr($class_bot));
-        }
+        $accept = esc_html__('Accept', 'track-message');
+        $html = sprintf('<div style="%s %s %s" id="%s">', esc_attr($color_applied), esc_attr($background_color_applied), esc_attr($ready_to_js), esc_attr($id));
         $html.= sprintf('<p>%s</p>', esc_html__($this->message,'track-message'));
         $html.= sprintf('<span style="%s %s" id="%s" class="%s">%s</span>', esc_attr($btn_color_applied), esc_attr($btn_background_color_applied), esc_attr($id_button), esc_attr($class_button), esc_html($accept));
         $html.= sprintf('</div>');
@@ -588,4 +735,3 @@ private $position_block_bottom_right;
 }
   
 new TrackMessage();
-  
