@@ -36,7 +36,7 @@ private $close_view_settings;
 private $close_settings;
 private $close_options;
 private $scroll_options;
-
+private $first_page_options;
 
     // Construct Function
     public function __construct(){
@@ -48,6 +48,7 @@ private $scroll_options;
         $this->cookie_options = get_option('cookie_time_settings');
         $this->close_options = get_option('close_settings');
         $this->scroll_options = get_option('scroll_distance');
+        $this->first_page_options = get_option('first_page');
         $this->cookie_settings=array(
                         1   =>      __('1 Month','track-message'),
                         2   =>      __('2 Months','track-message'),
@@ -156,7 +157,8 @@ private $scroll_options;
             'cookie' => $this->cookie_options['cookie_time'],
             'message' => $this->message_options['message_time'],
             'close' => $this->close_options['close_settings'],
-            'scrollDistance' => $this->scroll_options['scroll_distance']
+            'scrollDistance' => $this->scroll_options['scroll_distance'],
+            'firstPage' => $this->first_page_options['first_page']
         );
         $opening_view_settings = array(
             'openView' => $this->open_view_options['open_view']
@@ -346,6 +348,27 @@ private $scroll_options;
             false, 
             'track_message_general' 
         );
+        //First Page options
+        register_setting( 
+            'track_message_general', 
+            'first_page'
+        );
+        
+        add_settings_field( 
+            'first_page',
+            __('First page only? ', 
+            'track-message'), 
+            array( $this, 'firstPageCallback' ), 
+            'track_message_general', 
+            'first_page' 
+        );
+
+        add_settings_section( 
+            'first_page', 
+            '', 
+            false, 
+            'track_message_general' 
+        );
         //Cookie Time
         register_setting( 
             'track_message_general', 
@@ -510,6 +533,19 @@ private $scroll_options;
         $html .= ('</select>');
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
         echo $html;      
+    }
+    public function firstPageCallback() {
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+        $type = ('checkbox');
+        $value = ('1');
+        $checked =  checked( ! empty ( $this->first_page_options['first_page'] ), 1, false );
+        $name = ('first_page[first_page]');      
+        $html = sprintf('<input type="%s" name="%s" %s value="%s">
+        ',esc_attr($type), esc_attr($name), esc_attr($checked), esc_attr($value));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+        echo $html;
+
     }
     public function scrollDistanceCallback() {
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
