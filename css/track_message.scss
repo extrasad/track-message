@@ -2,7 +2,6 @@
 
 /** ------------------- FADE SLIDE EFFECT */
 //TOP
-
 .TrackMessageNotification__content_fade-slide--opennotification-top {
     animation: fadeSlideOpenMssgTop 0.5s ease-out forwards
 }
@@ -46,11 +45,11 @@
 /** ----------------------- FADE EFFECT */
 
 .TrackMessageNotification__content_fade--opennotification {
-    animation: fadeOpenMssgTop 0.5s ease-out forwards
+    animation: fadeOpenMssg 0.5s ease-out forwards
 }
 
 .TrackMessageNotification__content_fade--closenotification {
-    animation: fadeCloseMssgTop 1s ease-out forwards;
+    animation: fadeCloseMssg 1s ease-out forwards;
 }
 
 /** ------------------------ NONE EFFECT */
@@ -146,7 +145,6 @@
         opacity: 0.4;
         transform: translateY(-100%);
     }
-
     100% {
         opacity: 1;
         transform: translateY(0%);
@@ -173,10 +171,10 @@
         opacity: 1;
         transform: translateY(0%);
     }
-
     100% {
         opacity: 0;
-        transform: translateY(-100%);
+        transform: translateY(-200%);
+        z-index: -500;
     }
 }
 
@@ -186,10 +184,12 @@
     0% {
         opacity: 1;
         transform: translateY(0%);
+        z-index: -500;
     }
     100% {
         opacity: 0;
-        transform: translateY(100%);
+        transform: translateY(200%);
+        z-index: -500;
     }
 }
 
@@ -217,6 +217,21 @@
     0% {
         transform: translateY(100%);
     }
+}
+
+/** ------------------------------------------------------------------------------------ */
+
+/** ---------------  SLIDE EFFECT ---------------------------------------------*/
+
+// --------- OPEN MESSAGE
+
+// TOP
+
+@keyframes slideOpenMssgTop {
+    0% {
+        transform: translateY(-100%);
+    }
+
     100% {
         transform: translateY(0%);
     }
@@ -230,9 +245,9 @@
     0% {
         transform: translateY(0%);
     }
-
     100% {
-        transform: translateY(-100%);
+        transform: translateY(-200%);
+        z-index: -500;
     }
 }
 
@@ -243,7 +258,8 @@
         transform: translateY(0%);
     }
     100% {
-        transform: translateY(100%);
+        transform: translateY(200%);
+        z-index: -500;
     }
 }
 
@@ -255,22 +271,11 @@
 
 // TOP
 
-@keyframes fadeOpenMssgTop {
+@keyframes fadeOpenMssg {
     0% {
         opacity: 0.4;
     }
 
-    100% {
-        opacity: 1;
-    }
-}
-
-// BOTTOM
-
-@keyframes fadeOpenMssgBottom {
-    0% {
-        opacity: 0.4;
-    }
     100% {
         opacity: 1;
     }
@@ -280,24 +285,14 @@
 
 // TOP
 
-@keyframes fadeCloseMssgTop {
+@keyframes fadeCloseMssg {
     0% {
         opacity: 1;
     }
 
     100% {
         opacity: 0;
-    }
-}
-
-// BOTTOM
-
-@keyframes fadeCloseMssgBottom {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
+        z-index: -500;
     }
 }
 

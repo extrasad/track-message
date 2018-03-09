@@ -27,10 +27,10 @@
 
 /** ----------------------- FADE EFFECT */
 .TrackMessageNotification__content_fade--opennotification {
-  animation: fadeOpenMssgTop 0.5s ease-out forwards; }
+  animation: fadeOpenMssg 0.5s ease-out forwards; }
 
 .TrackMessageNotification__content_fade--closenotification {
-  animation: fadeCloseMssgTop 1s ease-out forwards; }
+  animation: fadeCloseMssg 1s ease-out forwards; }
 
 /** ------------------------ NONE EFFECT */
 .TrackMessageNotification__content--closenotification {
@@ -119,14 +119,17 @@
     transform: translateY(0%); }
   100% {
     opacity: 0;
-    transform: translateY(-100%); } }
+    transform: translateY(-200%);
+    z-index: -500; } }
 @keyframes fadeSlideCloseMssgBottom {
   0% {
     opacity: 1;
-    transform: translateY(0%); }
+    transform: translateY(0%);
+    z-index: -500; }
   100% {
     opacity: 0;
-    transform: translateY(100%); } }
+    transform: translateY(200%);
+    z-index: -500; } }
 /** ------------------------------------------------------------------------------------ */
 /** ---------------  SLIDE EFFECT ---------------------------------------------*/
 @keyframes slideOpenMssgTop {
@@ -136,41 +139,39 @@
     transform: translateY(0%); } }
 @keyframes slideOpenMssgBottom {
   0% {
-    transform: translateY(100%); }
+    transform: translateY(100%); } }
+/** ------------------------------------------------------------------------------------ */
+/** ---------------  SLIDE EFFECT ---------------------------------------------*/
+@keyframes slideOpenMssgTop {
+  0% {
+    transform: translateY(-100%); }
   100% {
     transform: translateY(0%); } }
 @keyframes slideCloseMssgTop {
   0% {
     transform: translateY(0%); }
   100% {
-    transform: translateY(-100%); } }
+    transform: translateY(-200%);
+    z-index: -500; } }
 @keyframes slideCloseMssgBottom {
   0% {
     transform: translateY(0%); }
   100% {
-    transform: translateY(100%); } }
+    transform: translateY(200%);
+    z-index: -500; } }
 /** ----------------------------------------------------------------------------- */
 /** ---------------  FADE EFFECT ---------------------------------------------*/
-@keyframes fadeOpenMssgTop {
+@keyframes fadeOpenMssg {
   0% {
     opacity: 0.4; }
   100% {
     opacity: 1; } }
-@keyframes fadeOpenMssgBottom {
-  0% {
-    opacity: 0.4; }
-  100% {
-    opacity: 1; } }
-@keyframes fadeCloseMssgTop {
+@keyframes fadeCloseMssg {
   0% {
     opacity: 1; }
   100% {
-    opacity: 0; } }
-@keyframes fadeCloseMssgBottom {
-  0% {
-    opacity: 1; }
-  100% {
-    opacity: 0; } }
+    opacity: 0;
+    z-index: -500; } }
 /** ----------------------------------------------------------------------------- */
 
 /*# sourceMappingURL=track_message.css.map */
