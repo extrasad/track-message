@@ -38,6 +38,7 @@ private $close_options;
 private $scroll_options;
 private $first_page_options;
 
+
     // Construct Function
     public function __construct(){
 
@@ -137,9 +138,8 @@ private $first_page_options;
 
         if( !isset( $_COOKIE["UserFirstTime"])){
             add_action('wp_head', array( $this, 'tmssgShowMessage'));
-        } 
+        }
     }
-
     // Main menu link
     public function customSettingsLink($links) {
         $link = (admin_url('/options-general.php?page=track_message')); 
@@ -147,7 +147,6 @@ private $first_page_options;
         array_push($links, $settings_link);
           return $links;
     }
-
     // Register scripts.
     public function myScripts(){
         $plugin_dir = plugin_dir_url(__FILE__);
