@@ -153,45 +153,63 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   // Getting the cookie value if is setted
   var getCookie =function(name){
-  var value = "; " + document.cookie;
-  var parts = value.split("; " + name + "=");
-    if (parts.length == 2){
-      return parts.pop().split(";").shift();
-    }
-
-  }
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+      if (parts.length == 2){
+        return parts.pop().split(";").shift();
+      }
+  };
   //Setting cookie
   var setCookie = function(){
-  var cookieName = 'UserFirstTime';
-  var cookieValue = '1';
-  var myDate = new Date();
-  var cookieTime = parseInt(phpValues.cookie);
-  //Cookie duration
-  myDate.setMonth(myDate.getMonth() + cookieTime);
-  //Check if cookie is setted to not reset the cookie.
-  var cookie= getCookie("UserFirstTime");
-  //Checking cookie value
-    if (!cookie  == '1'){
-      document.cookie = cookieName +"=" + cookieValue + ";expires=" + myDate 
-      + ";path=/";
+    var cookieName = 'UserFirstTime';
+    var cookieValue = '1';
+    var myDate = new Date();
+    var cookieTime = parseInt(phpValues.cookie);
+    //Cookie duration
+    myDate.setMonth(myDate.getMonth() + cookieTime);
+    //Check if cookie is setted to not reset the cookie.
+    var cookie= getCookie("UserFirstTime");
+    //Checking cookie value
+      if (!cookie  == '1'){
+        document.cookie = cookieName +"=" + cookieValue + ";expires=" + myDate 
+        + ";path=/";
       }
-
-    };
+  };
   // Time duration of the message in the page.
-  var messageTime = parseInt(phpValues.message);
-  var setTime = setTimeout(function(messageTime) {
-    closeTrackMssg()
-    setCookie()
-  }, messageTime*1000);
+  var closeSettings = function(){
+    var closeOption = phpValues.close;
+      switch(closeOption){
+        case('scroll'):
+          var settingScroll = function(){
+            var scrollDistance = parseInt(phpValues.scrollDistance);
+              scrollTop = window.pageYOffset
+                if(scrollTop >= scrollDistance){
+                  closeTrackMssg()
+                  setCookie()
+                  window.removeEventListener('scroll', settingScroll, false);
+                } 
+            }
+          window.addEventListener('scroll', settingScroll, false);
+        break;
+        case('click'):
+          close.addEventListener('click', closeTrackMssg, false);
+          close.addEventListener('click', setCookie, false);
+        break;
+        case('time'):
+          var messageTime = parseInt(phpValues.message);
+            var setTime = setTimeout(function(messageTime) {
+              closeTrackMssg()
+              setCookie()
+            }, messageTime*1000);
+        break;      
+      }
+  };
 
-
-  // Events and functions triggers
   
   loadAssets();
+  closeSettings();
   close.addEventListener('click', closeTrackMssg, false);
   close.addEventListener('click', setCookie, false);
-  window.addEventListener('beforeunload', setCookie, false);  
+
+ 
 });
-
-
-   

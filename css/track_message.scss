@@ -2,6 +2,10 @@
 
 /** ------------------- FADE SLIDE EFFECT */
 //TOP
+<<<<<<< HEAD
+=======
+
+>>>>>>> c0c5eabe487ef8ebe91d963ff9284f0bc1e8c340
 .TrackMessageNotification__content_fade-slide--opennotification-top {
     animation: fadeSlideOpenMssgTop 0.5s ease-out forwards
 }
@@ -18,6 +22,7 @@
 
 .TrackMessageNotification__content_fade-slide--closenotification-bottom {
     animation: fadeSlideCloseMssgBottom 1s ease-out forwards;
+<<<<<<< HEAD
 }
 
 /** ----------------------- SLIDE EFFECT */
@@ -98,6 +103,88 @@
     width: 300px;
 }
 
+=======
+}
+
+/** ----------------------- SLIDE EFFECT */
+
+// TOP
+
+.TrackMessageNotification__content_slide--opennotification-top {
+    animation: slideOpenMssgTop 0.5s ease-out forwards
+}
+
+.TrackMessageNotification__content_slide--closenotification-top {
+    animation: slideCloseMssgTop 0.5s ease-out forwards
+}
+
+// BOTTOM
+
+.TrackMessageNotification__content_slide--opennotification-bottom {
+    animation: slideOpenMssgBottom 0.5s ease-out forwards
+}
+
+.TrackMessageNotification__content_slide--closenotification-bottom {
+    animation: slideCloseMssgBottom 1s ease-out forwards;
+}
+
+/** ----------------------- FADE EFFECT */
+
+.TrackMessageNotification__content_fade--opennotification {
+    animation: fadeOpenMssgTop 0.5s ease-out forwards
+}
+
+.TrackMessageNotification__content_fade--closenotification {
+    animation: fadeCloseMssgTop 1s ease-out forwards;
+}
+
+/** ------------------------ NONE EFFECT */
+
+.TrackMessageNotification__content--closenotification {
+    display: none;
+}
+
+/** ------------------------------------------------------------------------------ */
+
+/** ----------------------------- POSITIONS ----------------------------------------------------- */
+
+.TrackMessageNotification__content--top {
+    top: 0; 
+    left: 0; 
+    right: 0;
+}
+
+.TrackMessageNotification__content--top-left {
+    left: 20px; 
+    top: 6%; 
+    width: 300px
+}
+
+.TrackMessageNotification__content--top-right {
+    right: 20px; 
+    top: 6%; 
+    width: 300px
+}
+
+.TrackMessageNotification__content--bottom {
+    bottom: 0; 
+    left: 0; 
+    right: 0;
+}
+
+.TrackMessageNotification__content--bottom-left {
+    left: 20px; 
+    bottom: 6%; 
+    width: 300px;
+}
+
+.TrackMessageNotification__content--bottom-right {
+    right: 20px; 
+    bottom: 6%; 
+    width: 300px;
+}
+
+>>>>>>> c0c5eabe487ef8ebe91d963ff9284f0bc1e8c340
 /** --------------------------------------------------------------------------------------------  */
 
 
@@ -162,6 +249,20 @@
     }
 }
 
+<<<<<<< HEAD
+=======
+@keyframes fadeSlideOpenMssgBottom {
+    0% {
+        opacity: 0.4;
+        transform: translateY(100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}
+
+>>>>>>> c0c5eabe487ef8ebe91d963ff9284f0bc1e8c340
 //  ------- CLOSE MESSAGE
 
 // TOP
@@ -213,6 +314,44 @@
 
 // BOTTOM
 
+<<<<<<< HEAD
+@keyframes slideOpenMssgBottom {
+    0% {
+=======
+@keyframes fadeSlideCloseMssgBottom {
+    0% {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+    100% {
+        opacity: 0;
+>>>>>>> c0c5eabe487ef8ebe91d963ff9284f0bc1e8c340
+        transform: translateY(100%);
+    }
+}
+
+/** ------------------------------------------------------------------------------------ */
+
+/** ---------------  SLIDE EFFECT ---------------------------------------------*/
+
+// --------- OPEN MESSAGE
+
+// TOP
+
+@keyframes slideOpenMssgTop {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+<<<<<<< HEAD
+=======
+// BOTTOM
+
 @keyframes slideOpenMssgBottom {
     0% {
         transform: translateY(100%);
@@ -222,15 +361,32 @@
     }
 }
 
+>>>>>>> c0c5eabe487ef8ebe91d963ff9284f0bc1e8c340
 // -------- CLOSE MESSAGE
 
 // TOP
 
 @keyframes slideCloseMssgTop {
+<<<<<<< HEAD
+=======
+    0% {
+        transform: translateY(0%);
+    }
+
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+// BOTTOM
+
+@keyframes slideCloseMssgBottom {
+>>>>>>> c0c5eabe487ef8ebe91d963ff9284f0bc1e8c340
     0% {
         transform: translateY(0%);
     }
     100% {
+<<<<<<< HEAD
         transform: translateY(-200%);
         z-index: -500;
     }
@@ -281,4 +437,64 @@
     }
 }
 
+=======
+        transform: translateY(100%);
+    }
+}
+
+/** ----------------------------------------------------------------------------- */
+
+/** ---------------  FADE EFFECT ---------------------------------------------*/
+
+// --------- OPEN MESSAGE
+
+// TOP
+
+@keyframes fadeOpenMssgTop {
+    0% {
+        opacity: 0.4;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+// BOTTOM
+
+@keyframes fadeOpenMssgBottom {
+    0% {
+        opacity: 0.4;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+// -------- CLOSE MESSAGE
+
+// TOP
+
+@keyframes fadeCloseMssgTop {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+// BOTTOM
+
+@keyframes fadeCloseMssgBottom {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+>>>>>>> c0c5eabe487ef8ebe91d963ff9284f0bc1e8c340
 /** ----------------------------------------------------------------------------- */

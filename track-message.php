@@ -33,6 +33,9 @@ private $open_view_options;
 private $open_view_settings;
 private $close_view_options;
 private $close_view_settings;
+private $close_settings;
+private $close_options;
+private $scroll_options;
 
 
     // Construct Function
@@ -43,6 +46,8 @@ private $close_view_settings;
         $this->message = ( $options != "" ) ? sanitize_text_field($options) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
         $this->message_options = get_option('message_time_settings');
         $this->cookie_options = get_option('cookie_time_settings');
+        $this->close_options = get_option('close_settings');
+        $this->scroll_options = get_option('scroll_distance');
         $this->cookie_settings=array(
                         1   =>      __('1 Month','track-message'),
                         2   =>      __('2 Months','track-message'),
@@ -84,6 +89,14 @@ private $close_view_settings;
                         65   =>      __('65 Seconds','track-message'),
                         70   =>      __('70 Seconds','track-message'),                               
         );
+        $this->close_settings = array(
+
+                        'time' =>   __('Timer', 'track-message'),
+                        'scroll' =>  __('Scroll', 'track-message'),
+                        'click' =>  __('Click', 'track-message'),
+
+
+        );
 
         $this->position_options = get_option('position_options');
 
@@ -124,7 +137,6 @@ private $close_view_settings;
         if( !isset( $_COOKIE["UserFirstTime"])){
             add_action('wp_head', array( $this, 'tmssgShowMessage'));
         } 
-  
     }
 
     // Main menu link
@@ -142,7 +154,9 @@ private $close_view_settings;
         $url_plugin_css  =   ($plugin_dir.'css/');
         $js_settings = array(
             'cookie' => $this->cookie_options['cookie_time'],
-            'message' => $this->message_options['message_time']
+            'message' => $this->message_options['message_time'],
+            'close' => $this->close_options['close_settings'],
+            'scrollDistance' => $this->scroll_options['scroll_distance']
         );
         $opening_view_settings = array(
             'openView' => $this->open_view_options['open_view']
@@ -268,6 +282,48 @@ private $close_view_settings;
             false, 
             'track_message_content' 
         );
+        //Close Settings
+        register_setting( 
+            'track_message_general', 
+            'close_settings'
+        );
+        
+        add_settings_field( 
+            'close_settings',
+            __('Close ', 
+            'track-message'), 
+            array( $this, 'closeCallback' ), 
+            'track_message_general', 
+            'close_settings' 
+        );
+
+        add_settings_section( 
+            'close_settings', 
+            __('General settings','track-message'), 
+            false, 
+            'track_message_general' 
+        );
+        //Scroll distance
+        register_setting( 
+            'track_message_general', 
+            'scroll_distance'
+        );
+        
+        add_settings_field( 
+            'scroll_distance',
+            __('Scroll Distance ', 
+            'track-message'), 
+            array( $this, 'scrollDistanceCallback' ), 
+            'track_message_general', 
+            'scroll_distance' 
+        );
+
+        add_settings_section( 
+            'scroll_distance', 
+            '', 
+            false, 
+            'track_message_general' 
+        );
 
         //Message Time
         register_setting( 
@@ -286,7 +342,7 @@ private $close_view_settings;
 
         add_settings_section( 
             'message_time', 
-            __('General settings','track-message'), 
+            '', 
             false, 
             'track_message_general' 
         );
@@ -438,7 +494,36 @@ private $close_view_settings;
         );
     }
        
-    // Callbacks Functions.  
+    // Callbacks Functions.
+    public function closeCallback(){
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+        $html = sprintf('<select name="%s">', esc_attr('close_settings[close_settings]'));
+        foreach($this->close_settings as $key => $value)
+        {
+            if(!isset($this->close_options['close_settings']) && $key == 'time'){
+                $html .= sprintf('<option value="%s" %s>%s</option>', esc_attr($key), esc_attr('selected'), esc_html($value));  
+            }else{
+            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->close_options['close_settings']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
+            }
+        }   
+        $html .= ('</select>');
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+        echo $html;      
+    }
+    public function scrollDistanceCallback() {
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+        $type = ('number');
+        $min = 1;
+        $value =($this->scroll_options['scroll_distance']); 
+        $name = ('scroll_distance[scroll_distance]');      
+        $html = sprintf('<input type="%s" min="%d" name="%s" value="%s">',esc_attr($type), esc_attr($min), esc_attr($name), esc_attr($value));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+
+        echo $html;
+    }
+
     public function cookieTimeCallback() {
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
@@ -650,4 +735,3 @@ private $close_view_settings;
 }
   
 new TrackMessage();
-  
