@@ -27,17 +27,10 @@
 
 /** ----------------------- FADE EFFECT */
 .TrackMessageNotification__content_fade--opennotification {
-<<<<<<< HEAD
   animation: fadeOpenMssg 0.5s ease-out forwards; }
 
 .TrackMessageNotification__content_fade--closenotification {
   animation: fadeCloseMssg 1s ease-out forwards; }
-=======
-  animation: fadeOpenMssgTop 0.5s ease-out forwards; }
-
-.TrackMessageNotification__content_fade--closenotification {
-  animation: fadeCloseMssgTop 1s ease-out forwards; }
->>>>>>> c0c5eabe487ef8ebe91d963ff9284f0bc1e8c340
 
 /** ------------------------ NONE EFFECT */
 .TrackMessageNotification__content--closenotification {
@@ -126,7 +119,6 @@
     transform: translateY(0%); }
   100% {
     opacity: 0;
-<<<<<<< HEAD
     transform: translateY(-200%);
     z-index: -500; } }
 @keyframes fadeSlideCloseMssgBottom {
@@ -138,16 +130,6 @@
     opacity: 0;
     transform: translateY(200%);
     z-index: -500; } }
-=======
-    transform: translateY(-100%); } }
-@keyframes fadeSlideCloseMssgBottom {
-  0% {
-    opacity: 1;
-    transform: translateY(0%); }
-  100% {
-    opacity: 0;
-    transform: translateY(100%); } }
->>>>>>> c0c5eabe487ef8ebe91d963ff9284f0bc1e8c340
 /** ------------------------------------------------------------------------------------ */
 /** ---------------  SLIDE EFFECT ---------------------------------------------*/
 @keyframes slideOpenMssgTop {
@@ -157,63 +139,39 @@
     transform: translateY(0%); } }
 @keyframes slideOpenMssgBottom {
   0% {
-    transform: translateY(100%); }
+    transform: translateY(100%); } }
+/** ------------------------------------------------------------------------------------ */
+/** ---------------  SLIDE EFFECT ---------------------------------------------*/
+@keyframes slideOpenMssgTop {
+  0% {
+    transform: translateY(-100%); }
   100% {
     transform: translateY(0%); } }
 @keyframes slideCloseMssgTop {
   0% {
     transform: translateY(0%); }
   100% {
-<<<<<<< HEAD
     transform: translateY(-200%);
     z-index: -500; } }
-=======
-    transform: translateY(-100%); } }
->>>>>>> c0c5eabe487ef8ebe91d963ff9284f0bc1e8c340
 @keyframes slideCloseMssgBottom {
   0% {
     transform: translateY(0%); }
   100% {
-<<<<<<< HEAD
     transform: translateY(200%);
     z-index: -500; } }
 /** ----------------------------------------------------------------------------- */
 /** ---------------  FADE EFFECT ---------------------------------------------*/
 @keyframes fadeOpenMssg {
-=======
-    transform: translateY(100%); } }
-/** ----------------------------------------------------------------------------- */
-/** ---------------  FADE EFFECT ---------------------------------------------*/
-@keyframes fadeOpenMssgTop {
->>>>>>> c0c5eabe487ef8ebe91d963ff9284f0bc1e8c340
   0% {
     opacity: 0.4; }
   100% {
     opacity: 1; } }
-<<<<<<< HEAD
 @keyframes fadeCloseMssg {
   0% {
     opacity: 1; }
   100% {
     opacity: 0;
     z-index: -500; } }
-=======
-@keyframes fadeOpenMssgBottom {
-  0% {
-    opacity: 0.4; }
-  100% {
-    opacity: 1; } }
-@keyframes fadeCloseMssgTop {
-  0% {
-    opacity: 1; }
-  100% {
-    opacity: 0; } }
-@keyframes fadeCloseMssgBottom {
-  0% {
-    opacity: 1; }
-  100% {
-    opacity: 0; } }
->>>>>>> c0c5eabe487ef8ebe91d963ff9284f0bc1e8c340
 /** ----------------------------------------------------------------------------- */
 
 /*# sourceMappingURL=track_message.css.map */
