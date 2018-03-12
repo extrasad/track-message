@@ -166,20 +166,11 @@ private $first_page;
             'message' => $this->general_options['message_time'],
             'close' => $this->general_options['close_settings'],
             'scrollDistance' => $this->general_options['scroll_distance'],
-            'firstPage' =>  $this->first_page
-        );
-        $opening_view_settings = array(
-            'openView' => $this->open_view_options['open_view']
-        );
-        $closing_view_settings = array(
-            'closeView' => $this->close_view_options['close_view']
-        );
-        $positioning_settings =array(
-            'mssgPosition' => $this->position_options['positions']
-        );
-        
-        
-
+            'firstPage' =>  $this->first_page,
+            'openView' => $this->styles_options['open_view'],
+            'closeView' => $this->styles_options['close_view'],
+            'mssgPosition' => $this->styles_options['positions']
+        );               
         
         if (is_admin()){
             wp_register_script('tmssg_custom_js', $url_plugin_js . 'settings.js');
@@ -194,9 +185,6 @@ private $first_page;
             wp_enqueue_script('tmssg_js');
         }
         wp_localize_script('tmssg_js', 'phpValues', $js_settings);
-        wp_localize_script('tmssg_js', 'openViewSettings', $opening_view_settings);
-        wp_localize_script('tmssg_js', 'closeViewSettings', $closing_view_settings);
-        wp_localize_script('tmssg_js', 'positionSettings', $positioning_settings);
     }
   
 
