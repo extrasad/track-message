@@ -36,18 +36,25 @@ private $close_view_settings;
 private $close_settings;
 private $close_options;
 private $scroll_options;
+private $first_page_options;
+private $general_options;
+private $styles_options;
+private $content_options;
+private $first_page;
+
 
 
     // Construct Function
     public function __construct(){
 
         $plugin = plugin_basename( __FILE__ );
-        $options = get_option('message_field');
-        $this->message = ( $options != "" ) ? sanitize_text_field($options) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
-        $this->message_options = get_option('message_time_settings');
-        $this->cookie_options = get_option('cookie_time_settings');
-        $this->close_options = get_option('close_settings');
-        $this->scroll_options = get_option('scroll_distance');
+        $this->content_options = get_option('tmssg_content_options');
+        $this->general_options = get_option('tmssg_general_options');
+        $this->styles_options = get_option('tmssg_styles_options');
+        $this->message = ( $this->content_options['message_field'] != "" ) ? sanitize_text_field($this->content_options['message_field']) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
+        $this->first_page = (isset($this->general_options['first_page'])) ? $this->general_options['first_page'] : 0;
+
+
         $this->cookie_settings=array(
                         1   =>      __('1 Month','track-message'),
                         2   =>      __('2 Months','track-message'),
@@ -131,32 +138,35 @@ private $scroll_options;
 
         add_action( 'wp_enqueue_scripts', array( $this, 'myScripts'));
         add_action( 'admin_menu', array( $this, 'tmssgPluginMenu'));
-        add_action( 'admin_init', array( $this, 'settingsInit' ) );
+        add_action( 'admin_init', array( $this, 'generalSettingsInit' ));
+        add_action( 'admin_init', array( $this, 'contentSettingsInit' ));
+        add_action( 'admin_init', array( $this, 'stylesSettingsInit' ));
+
         add_filter( "plugin_action_links_$plugin", array($this, 'customSettingsLink' ));
 
         if( !isset( $_COOKIE["UserFirstTime"])){
             add_action('wp_head', array( $this, 'tmssgShowMessage'));
-        } 
+        }
     }
-
     // Main menu link
     public function customSettingsLink($links) {
         $link = (admin_url('/options-general.php?page=track_message')); 
         $settings_link = sprintf('<a href="%s">' .(esc_html__( 'Settings', 'track-message' )) . '</a>', esc_url($link));
         array_push($links, $settings_link);
           return $links;
-    }
 
+    }
     // Register scripts.
     public function myScripts(){
         $plugin_dir = plugin_dir_url(__FILE__);
         $url_plugin_js  =   ($plugin_dir.'js/');
         $url_plugin_css  =   ($plugin_dir.'css/');
         $js_settings = array(
-            'cookie' => $this->cookie_options['cookie_time'],
-            'message' => $this->message_options['message_time'],
-            'close' => $this->close_options['close_settings'],
-            'scrollDistance' => $this->scroll_options['scroll_distance']
+            'cookie' => $this->general_options['cookie_time'],
+            'message' => $this->general_options['message_time'],
+            'close' => $this->general_options['close_settings'],
+            'scrollDistance' => $this->general_options['scroll_distance'],
+            'firstPage' =>  $this->first_page
         );
         $opening_view_settings = array(
             'openView' => $this->open_view_options['open_view']
@@ -199,7 +209,6 @@ private $scroll_options;
                             'track_message', 
                             array( $this, 'tmssgPluginContent'));
         add_action( 'load-' . $settings, array($this, 'myScripts' ));
-
     }
     
     //Plugin content
@@ -210,7 +219,7 @@ private $scroll_options;
         <?php
             if((isset( $_GET[ 'tab' ] ))){
                 $active_tab = $_GET[ 'tab'];
-            }else {
+            }else{
                 switch($active_tab){
                     case($active_tab == 'general_options'):
                         $active_tab = 'general_options';
@@ -226,6 +235,22 @@ private $scroll_options;
                         break;
                         }
                     }
+        //Button reset default per page.
+        $reset = isset ( $_GET['reset'] ) ? $_GET['reset'] : '';
+            switch($active_tab){
+                case($active_tab == 'general_options' && isset ( $_POST['reset'] )):
+                    $defaults = $this -> generalDefaultSettings();
+                    update_option ( 'tmssg_general_options', $defaults );
+                break;                          
+                case($active_tab == 'content_options' && isset ( $_POST['reset'] )):
+                    $defaults = $this -> contentDefaultSettings();
+                    update_option ( 'tmssg_content_options', $defaults );
+                break;
+                case($active_tab == 'styles_options' && isset ( $_POST['reset'] )):
+                    $defaults = $this -> stylesDefaultSettings();
+                    update_option ( 'tmssg_styles_options', $defaults );
+                    break;                                                                            
+            }    
         ?>
 
         <h2 class="nav-tab-wrapper">
@@ -238,199 +263,189 @@ private $scroll_options;
             <?php
                 switch($active_tab){
                     case($active_tab == 'general_options'):
-                        settings_fields( 'track_message_general' );
-                        do_settings_sections( 'track_message_general' );
+                        settings_fields( 'tmssg_general' );
+                        do_settings_sections( 'tmssg_general' );
                         break;
                     case($active_tab == 'content_options'):
-                        settings_fields( 'track_message_content' );
-                        do_settings_sections( 'track_message_content' );
+                        settings_fields( 'tmssg_content' );
+                        do_settings_sections( 'tmssg_content' );
                         break;
                     case($active_tab == 'styles_options'):
-                        settings_fields( 'track_message_styles' );
-                        do_settings_sections( 'track_message_styles' );
+                        settings_fields( 'tmssg_styles' );
+                        do_settings_sections( 'tmssg_styles' );
                         break;
                     case($active_tab == 'policy_options'):
-                        settings_fields( 'track_message_policy' );
-                        do_settings_sections( 'track_message_policy' );
+                        settings_fields( 'tmssg_policy' );
+                        do_settings_sections( 'tmssg_policy' );
                         break;
                     } 
-        submit_button();
+            submit_button();
             ?>
         </form>
+        <form method="post" action="">
+			<p class="submit">
+				<input name="reset" class="button button-secondary" type="submit" value="<?php _e( 'Reset selected tab options defaults ', 'track-message' ); ?>" >
+				<input type="hidden" name="action" value="reset" />
+			</p>
+		</form>
         </div>
         <?php
     }
     // Init settings..    
-    public function settingsInit(){
-        //Text message
+    public function generalSettingsInit(){
+        //General settings
         register_setting( 
-            'track_message_content', 
-            'message_field'
-        );
+            'tmssg_general', 
+            'tmssg_general_options');
         
-        add_settings_field( 
-            'message_field',
-            __('Write the message', 'track-message'), 
-            array( $this, 'mssgFieldCallback' ), 
-            'track_message_content', 'message_section' 
-        );
-
         add_settings_section( 
-            'message_section', 
-            __('Content Settings',
-            'track-message'), 
+            'tmssg_general_tab', 
+            __('General settings','track-message'), 
             false, 
-            'track_message_content' 
+            'tmssg_general' 
         );
-        //Close Settings
-        register_setting( 
-            'track_message_general', 
-            'close_settings'
-        );
-        
+       
+        //Close Settings        
         add_settings_field( 
             'close_settings',
             __('Close ', 
             'track-message'), 
             array( $this, 'closeCallback' ), 
-            'track_message_general', 
-            'close_settings' 
+            'tmssg_general', 
+            'tmssg_general_tab' 
         );
 
-        add_settings_section( 
-            'close_settings', 
-            __('General settings','track-message'), 
-            false, 
-            'track_message_general' 
-        );
         //Scroll distance
-        register_setting( 
-            'track_message_general', 
-            'scroll_distance'
-        );
-        
         add_settings_field( 
             'scroll_distance',
             __('Scroll Distance ', 
             'track-message'), 
             array( $this, 'scrollDistanceCallback' ), 
-            'track_message_general', 
-            'scroll_distance' 
-        );
-
-        add_settings_section( 
-            'scroll_distance', 
-            '', 
-            false, 
-            'track_message_general' 
+            'tmssg_general', 
+            'tmssg_general_tab' 
         );
 
         //Message Time
-        register_setting( 
-            'track_message_general', 
-            'message_time_settings'
-        );
-        
         add_settings_field( 
             'message_time',
             __('Set message duration on front-page ', 
             'track-message'), 
             array( $this, 'mssgTimeCallback' ), 
-            'track_message_general', 
-            'message_time' 
+            'tmssg_general', 
+            'tmssg_general_tab' 
         );
 
-        add_settings_section( 
-            'message_time', 
-            '', 
-            false, 
-            'track_message_general' 
+        //First Page options
+        add_settings_field( 
+            'first_page',
+            __('First page only? ', 
+            'track-message'), 
+            array( $this, 'firstPageCallback' ), 
+            'tmssg_general', 
+            'tmssg_general_tab' 
         );
-        //Cookie Time
-        register_setting( 
-            'track_message_general', 
-            'cookie_time_settings'
-        );
-        
+
+        //Cookie Time        
         add_settings_field(
             'cookie_time', 
             __('Set cookie duration to expire',
             'track-message'), 
             array( $this, 'cookieTimeCallback' ), 
-            'track_message_general', 
-            'cookie_time' 
+            'tmssg_general', 
+            'tmssg_general_tab' 
         );
-
-        add_settings_section(
-            'cookie_time', 
-            __('',
+        $options = get_option ('tmssg_general_options');
+        if ( false === $options ) {
+            // Default array.
+            $defaults = $this -> generalDefaultSettings();
+            update_option ('tmssg_general_options', $defaults);
+        }
+    }
+    public function contentSettingsInit(){
+        register_setting( 
+            'tmssg_content', 
+            'tmssg_content_options'
+        ); 
+        add_settings_section( 
+            'tmssg_content_tab', 
+            __('Content Settings',
             'track-message'), 
             false, 
-            'track_message_general' 
+            'tmssg_content' 
+        );   
+        add_settings_field( 
+            'message_field',
+            __('Write the message', 'track-message'), 
+            array( $this, 'mssgFieldCallback' ), 
+            'tmssg_content', 'tmssg_content_tab' 
         );
+
+        $options = get_option ('tmssg_content_options');
+            if ( false === $options ) {
+                // Default array.
+                $defaults = $this -> contentDefaultSettings();
+                update_option ('tmssg_content_options', $defaults);
+            }
+
+    }
+
+    public function stylesSettingsInit(){
 
         //Position - Design
         register_setting(
-            'track_message_styles', 
-            'position_options');
+            'tmssg_styles', 
+            'tmssg_styles_options');
+
+        add_settings_section(
+            'tmssg_styles_tab', 
+            __('Styles Settings','track-message'), 
+            false, 
+            'tmssg_styles'
+        );
 
         add_settings_field(
             'positions', 
             __('Where do you want your message to show up?', 
             'track-message'), 
             array( $this,'positionOptionsCallback'), 
-            'track_message_styles', 
-            'position_section'
+            'tmssg_styles', 
+            'tmssg_styles_tab'
         );
 
-        add_settings_section(
-            'position_section', 
-            __('Styles Settings','track-message'), 
-            false, 
-            'track_message_styles'
-        );
 
         //View - Design
 
         // Open View
-        register_setting(
-            'track_message_styles', 
-            'open_view_options');
-
         add_settings_field(
             'open_view', 
             __('How do you want the message to show up?', 
             'track-message'), 
             array( $this,'openView'), 
-            'track_message_styles', 
-            'view_section'
+            'tmssg_styles', 
+            'tmssg_styles_tab'
         );
 
         add_settings_section(
             'view_section', 
             __('View Settings','track-message'), 
             false, 
-            'track_message_styles'
+            'tmssg_styles_tab'
         );
 
         // Close View
-        register_setting(
-            'track_message_styles', 
-            'close_view_options');
-
         add_settings_field(
             'close_view', 
             __('How do you want the message to be closed?', 
             'track-message'), 
             array( $this,'closeView'), 
-            'track_message_styles', 
-            'view_section'
+            'tmssg_styles', 
+            'tmssg_styles_tab'
         );
      
 
         //Color Picker - Design
         register_setting(
-            'track_message_styles',
+            'tmssg_styles',
             'color_options',
             array( $this, 'validateOptions' )
         );
@@ -439,19 +454,19 @@ private $scroll_options;
             'wp-color-picker-section',
             __( 'Choose Your Color', 'track-message' ),
             array( $this, 'optionsSettingsText' ),
-            'track_message_styles'
+            'tmssg_styles_tab'
         );
           
         add_settings_field(
             'color',
             __( 'Text color', 'track-message'  ),
             array( $this, 'colorInput' ),
-            'track_message_styles',
-            'wp-color-picker-section'
+            'tmssg_styles', 
+            'tmssg_styles_tab'
         );
 
         register_setting(
-            'track_message_styles',
+            'tmssg_styles',
             'background_color_options',
             array( $this, 'validateBackgroundOptions' )
         );
@@ -460,13 +475,13 @@ private $scroll_options;
             'background_color',
             __( 'Background Color', 'track-message'  ),
             array( $this, 'backgroundColorInput' ),
-            'track_message_styles',
-            'wp-color-picker-section'
+            'tmssg_styles', 
+            'tmssg_styles_tab'
         );
         //Button color settings
 
         register_setting(
-            'track_message_styles',
+            'tmssg_styles',
             'btn_color_options',
             array( $this, 'validateBtnColorOptions' )
         );
@@ -475,12 +490,12 @@ private $scroll_options;
             'btn_color',
             __( 'Button Color', 'track-message'  ),
             array( $this, 'btnColorInput' ),
-            'track_message_styles',
-            'wp-color-picker-section'
+            'tmssg_styles', 
+            'tmssg_styles_tab'
         );
 
         register_setting(
-            'track_message_styles',
+            'tmssg_styles',
             'background_btn_color_options',
             array( $this, 'validateBtnBackgroundOptions' )
         );
@@ -489,35 +504,78 @@ private $scroll_options;
             'background_btn_color',
             __( 'Button Background Color', 'track-message'  ),
             array( $this, 'btnBackgroundColorInput' ),
-            'track_message_styles',
-            'wp-color-picker-section'
+            'tmssg_styles', 
+            'tmssg_styles_tab'
         );
+        $options = get_option ('tmssg_styles_options');
+            if (false === $options) {
+                // Default array.
+                $defaults = $this -> stylesDefaultSettings();
+                update_option ('tmssg_styles_options', $defaults);
+        }
+    } 
+
+    // Defaults Settings.
+    public function generalDefaultSettings() {
+        $defaults = array (
+            'close_settings'				=>	'click',
+            'scroll_distance'				=> 250,
+            'first_page'					=>	0,
+            'message_time'					=>	15,
+            'cookie_time'					=>	12
+        );
+        return $defaults;
     }
-       
+
+    public function contentDefaultSettings() {
+        $defaults = array (
+            'message_field'				=>	__('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message')
+        );
+        return $defaults;
+    }
+    public function stylesDefaultSettings() {
+        $defaults = array (
+            'positions'				=>	'position_bottom',
+            'close_view'			=> 'none',
+            'open_view'				=>	'none'
+        );
+        return $defaults;
+    }
+    
     // Callbacks Functions.
     public function closeCallback(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
-        $html = sprintf('<select name="%s">', esc_attr('close_settings[close_settings]'));
+        $html = sprintf('<select name="%s">', esc_attr('tmssg_general_options[close_settings]'));
         foreach($this->close_settings as $key => $value)
         {
-            if(!isset($this->close_options['close_settings']) && $key == 'time'){
-                $html .= sprintf('<option value="%s" %s>%s</option>', esc_attr($key), esc_attr('selected'), esc_html($value));  
-            }else{
-            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->close_options['close_settings']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
-            }
+            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->general_options['close_settings']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
+            
         }   
         $html .= ('</select>');
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
         echo $html;      
+    }
+    public function firstPageCallback() {
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+        $type = ('checkbox');
+        $value = ('1');
+        $checked =  checked( ! empty ( $this->general_options['first_page'] ), 1, false );
+        $name = ('tmssg_general_options[first_page]');      
+        $html = sprintf('<input type="%s" name="%s" %s value="%s">
+        ',esc_attr($type), esc_attr($name), esc_attr($checked), esc_attr($value));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+        echo $html;
+
     }
     public function scrollDistanceCallback() {
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
         $type = ('number');
         $min = 1;
-        $value =($this->scroll_options['scroll_distance']); 
-        $name = ('scroll_distance[scroll_distance]');      
+        $value =($this->general_options['scroll_distance']); 
+        $name = ('tmssg_general_options[scroll_distance]');      
         $html = sprintf('<input type="%s" min="%d" name="%s" value="%s">',esc_attr($type), esc_attr($min), esc_attr($name), esc_attr($value));
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
 
@@ -527,14 +585,10 @@ private $scroll_options;
     public function cookieTimeCallback() {
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
-        $html = sprintf('<select name="%s">', esc_attr('cookie_time_settings[cookie_time]'));
+        $html = sprintf('<select name="%s">', esc_attr('tmssg_general_options[cookie_time]'));
         foreach($this->cookie_settings as $key => $value)
         {
-            if(!isset($this->cookie_options['cookie_time']) && $key == 12){
-                $html .= sprintf('<option value="%d" %s>%s</option>', esc_attr($key), esc_attr('selected'), esc_html($value));  
-            }else{
-            $html .= sprintf('<option value="%d"'.selected(esc_attr($this->cookie_options['cookie_time']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
-            }
+            $html .= sprintf('<option value="%d"'.selected(esc_attr($this->general_options['cookie_time']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
         }   
         $html .= ('</select>');
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
@@ -545,7 +599,7 @@ private $scroll_options;
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
         $style = ('width: 70%;');       
-        $html = sprintf('<textarea name="%s" id="%s" style="%s"',esc_attr('message_field'), esc_attr('message_field'), esc_attr($style));
+        $html = sprintf('<textarea name="%s" id="%s" style="%s"',esc_attr('tmssg_content_options[message_field]'), esc_attr('message_field'), esc_attr($style));
         $html.= sprintf('type="text">%s</textarea>', esc_html__($this->message, 'track-message'));
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
 
@@ -555,14 +609,10 @@ private $scroll_options;
     public function mssgTimeCallback() {
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
-        $html = sprintf('<select name="%s">', esc_attr('message_time_settings[message_time]'));
+        $html = sprintf('<select name="%s">', esc_attr('tmssg_general_options[message_time]'));
         foreach($this->message_settings as $key => $value)
         {
-            if(!isset($this->message_options['message_time']) && $key == 30){
-                $html .= sprintf('<option value="%d" %s>%s</option>', esc_attr($key), esc_attr('selected'), esc_html($value));  
-            }else{
-            $html .= sprintf('<option value="%d"'.selected(esc_attr($this->message_options['message_time']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
-            }
+            $html .= sprintf('<option value="%d"'.selected(esc_attr($this->general_options['message_time']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
         }
         $html .= ('</select>');
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
@@ -573,14 +623,10 @@ private $scroll_options;
     public function positionOptionsCallback(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
-        $html = sprintf('<select name="%s">', esc_attr('position_options[positions]'));
+        $html = sprintf('<select name="%s">', esc_attr('tmssg_styles_options[positions]'));
         foreach($this->position_settings as $key => $value)
         {
-            if(!isset($this->position_options['positions']) && $key == 'position_bottom'){
-                $html .= sprintf('<option value="%s" %s>%s</option>', esc_attr($key), esc_attr('selected'), esc_html($value));  
-            }else{
-            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->position_options['positions']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
-            }
+            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->styles_options['positions']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
         }
         $html .= ('</select>');
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
@@ -590,14 +636,10 @@ private $scroll_options;
     public function openView(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
-        $html = sprintf('<select name="%s">', esc_attr('open_view_options[open_view]'));
+        $html = sprintf('<select name="%s">', esc_attr('tmssg_styles_options[open_view]'));
         foreach($this->open_view_settings as $key => $value)
         {
-            if(!isset($this->open_view_options['open_view']) && $key == 'none'){
-                $html .= sprintf('<option value="%s" %s>%s</option>', esc_attr($key), esc_attr('selected'), esc_html($value));  
-            }else{
-            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->open_view_options['open_view']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
-            }
+            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->styles_options['open_view']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
         }
         $html .= ('</select>');
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
@@ -607,14 +649,10 @@ private $scroll_options;
     public function closeView(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
-        $html = sprintf('<select name="%s">', esc_attr('close_view_options[close_view]'));
+        $html = sprintf('<select name="%s">', esc_attr('tmssg_styles_options[close_view]'));
         foreach($this->close_view_settings as $key => $value)
         {
-            if(!isset($this->close_view_options['close_view']) && $key == 'none'){
-                $html .= sprintf('<option value="%s" %s>%s</option>', esc_attr($key), esc_attr('selected'), esc_html($value));  
-            }else{
-            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->close_view_options['close_view']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
-            }
+            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->styles_options['close_view']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
         }
         $html .= ('</select>');
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));

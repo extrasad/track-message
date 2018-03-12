@@ -204,10 +204,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
         break;      
       }
   };
-
+  var firstPageSettings = function(){
+    var firstPage = parseInt(phpValues.firstPage);
+      console.log(typeof firstPage + '  ' + firstPage);
+      if (firstPage === 1){
+        setCookie()
+      }
+  }
   
   loadAssets();
   closeSettings();
+  firstPageSettings();
   close.addEventListener('click', closeTrackMssg, false);
   close.addEventListener('click', setCookie, false);
 
