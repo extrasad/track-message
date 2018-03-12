@@ -40,6 +40,7 @@ private $first_page_options;
 private $general_options;
 private $styles_options;
 private $content_options;
+private $first_page;
 
 
 
@@ -51,6 +52,7 @@ private $content_options;
         $this->general_options = get_option('tmssg_general_options');
         $this->styles_options = get_option('tmssg_styles_options');
         $this->message = ( $this->content_options['message_field'] != "" ) ? sanitize_text_field($this->content_options['message_field']) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
+        $this->first_page = (isset($this->general_options['first_page'])) ? $this->general_options['first_page'] : 0;
 
 
         $this->cookie_settings=array(
@@ -152,6 +154,7 @@ private $content_options;
         $settings_link = sprintf('<a href="%s">' .(esc_html__( 'Settings', 'track-message' )) . '</a>', esc_url($link));
         array_push($links, $settings_link);
           return $links;
+
     }
     // Register scripts.
     public function myScripts(){
@@ -163,7 +166,7 @@ private $content_options;
             'message' => $this->general_options['message_time'],
             'close' => $this->general_options['close_settings'],
             'scrollDistance' => $this->general_options['scroll_distance'],
-            'firstPage' =>  $this->general_options['first_page']
+            'firstPage' =>  $this->first_page
         );
         $opening_view_settings = array(
             'openView' => $this->open_view_options['open_view']
@@ -206,7 +209,6 @@ private $content_options;
                             'track_message', 
                             array( $this, 'tmssgPluginContent'));
         add_action( 'load-' . $settings, array($this, 'myScripts' ));
-
     }
     
     //Plugin content
@@ -217,7 +219,7 @@ private $content_options;
         <?php
             if((isset( $_GET[ 'tab' ] ))){
                 $active_tab = $_GET[ 'tab'];
-            }else {
+            }else{
                 switch($active_tab){
                     case($active_tab == 'general_options'):
                         $active_tab = 'general_options';
@@ -233,6 +235,22 @@ private $content_options;
                         break;
                         }
                     }
+        //Button reset default per page.
+        $reset = isset ( $_GET['reset'] ) ? $_GET['reset'] : '';
+            switch($active_tab){
+                case($active_tab == 'general_options' && isset ( $_POST['reset'] )):
+                    $defaults = $this -> generalDefaultSettings();
+                    update_option ( 'tmssg_general_options', $defaults );
+                break;                          
+                case($active_tab == 'content_options' && isset ( $_POST['reset'] )):
+                    $defaults = $this -> contentDefaultSettings();
+                    update_option ( 'tmssg_content_options', $defaults );
+                break;
+                case($active_tab == 'styles_options' && isset ( $_POST['reset'] )):
+                    $defaults = $this -> stylesDefaultSettings();
+                    update_option ( 'tmssg_styles_options', $defaults );
+                    break;                                                                            
+            }    
         ?>
 
         <h2 class="nav-tab-wrapper">
@@ -264,6 +282,12 @@ private $content_options;
             submit_button();
             ?>
         </form>
+        <form method="post" action="">
+			<p class="submit">
+				<input name="reset" class="button button-secondary" type="submit" value="<?php _e( 'Reset selected tab options defaults ', 'track-message' ); ?>" >
+				<input type="hidden" name="action" value="reset" />
+			</p>
+		</form>
         </div>
         <?php
     }
@@ -331,16 +355,11 @@ private $content_options;
             'tmssg_general_tab' 
         );
         $options = get_option ('tmssg_general_options');
-            if ( false === $options ) {
-                // Default array.
-                $defaults = $this -> generalDefaultSettings();
-                update_option ('tmssg_general_options', $defaults);
-            }
-            if (!array_key_exists ('first_page' , $options)){
-                $test = $this-> test();
-                update_option('tmssg_general_options', $test);
-            }
-
+        if ( false === $options ) {
+            // Default array.
+            $defaults = $this -> generalDefaultSettings();
+            update_option ('tmssg_general_options', $defaults);
+        }
     }
     public function contentSettingsInit(){
         register_setting( 
@@ -500,23 +519,12 @@ private $content_options;
     public function generalDefaultSettings() {
         $defaults = array (
             'close_settings'				=>	'click',
-            'scroll_distance'				=> 200,
+            'scroll_distance'				=> 250,
             'first_page'					=>	0,
-            'message_time'					=>	20,
-            'cookie_time'					=>	10
+            'message_time'					=>	15,
+            'cookie_time'					=>	12
         );
         return $defaults;
-    }
-
-    public function test(){
-        $test = array (
-            'close_settings'		=>	$this->general_options['close_settings'],
-            'scroll_distance'		=>  $this->general_options['scroll_distance'],
-            'first_page'			=>	0,
-            'message_time'			=>	$this->general_options['message_time'],
-            'cookie_time'			=>	$this->general_options['cookie_time']
-        );
-        return $test;
     }
 
     public function contentDefaultSettings() {
