@@ -182,16 +182,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // Time duration of the message in the page.
   var closeSettings = function(){
     var closeOption = phpValues.close;
+    var mandatoryAccept = parseInt(phpValues.mandatoryAccept);
       switch(closeOption){
         case('scroll'):
           var settingScroll = function(){
             var scrollDistance = parseInt(phpValues.scrollDistance);
               scrollTop = window.pageYOffset
-                if(scrollTop >= scrollDistance){
-                  closeTrackMssg()
+                if(scrollTop >= scrollDistance && mandatoryAccept == 0){
                   setCookie()
+                  closeTrackMssg()
                   window.removeEventListener('scroll', settingScroll, false);
-                } 
+                }
             }
           window.addEventListener('scroll', settingScroll, false);
         break;
@@ -201,12 +202,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
         break;
         case('time'):
           var messageTime = parseInt(phpValues.message);
+          if(mandatoryAccept == 0){
             var setTime = setTimeout(function(messageTime) {
-              closeTrackMssg()
               setCookie()
+              closeTrackMssg()
             }, messageTime*1000);
+          }
         break;      
-      }
+    }
   };
   var firstPageSettings = function(){
     var firstPage = parseInt(phpValues.firstPage);
