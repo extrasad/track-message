@@ -79,17 +79,21 @@
   box-sizing: border-box; }
   .TrackMessageNotification p {
     display: inline;
-    font-family: Arial;
-    padding-right: 0.5em;
+    font-family: Helvetica;
+    padding-right: 0.4em;
+    margin: 0; }
+  .TrackMessageNotification a {
+    display: inline;
+    font-family: Helvetica;
+    padding-right: 0.6em;
     margin: 0; }
   .TrackMessageNotification .TrackMessageCookieNotification__inline--btn {
-    -webkit-border-radius: 9;
-    -moz-border-radius: 9;
     border-radius: 2px;
-    font-family: Helvetica;
-    font-size: 10px;
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 13px;
     text-align: center;
-    padding: 4px 7px 4px 7px;
+    padding: 6px 8px 6px 8px;
     text-decoration: none;
     cursor: pointer;
     transition-duration: .3s;
