@@ -41,6 +41,7 @@ private $general_options;
 private $styles_options;
 private $content_options;
 private $first_page;
+private $mandatory_accept;
 
 
 
@@ -53,6 +54,7 @@ private $first_page;
         $this->styles_options = get_option('tmssg_styles_options');
         $this->message = ( $this->content_options['message_field'] != "" ) ? sanitize_text_field($this->content_options['message_field']) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
         $this->first_page = (isset($this->general_options['first_page'])) ? $this->general_options['first_page'] : 0;
+        $this->mandatory_accept = (isset($this->general_options['mandatory_accept'])) ? $this->general_options['mandatory_accept'] : 0;
 
 
         $this->cookie_settings=array(
@@ -169,7 +171,8 @@ private $first_page;
             'firstPage' =>  $this->first_page,
             'openView' => $this->styles_options['open_view'],
             'closeView' => $this->styles_options['close_view'],
-            'mssgPosition' => $this->styles_options['positions']
+            'mssgPosition' => $this->styles_options['positions'],
+            'mandatoryAccept'=> $this->mandatory_accept
         );               
         
         if (is_admin()){
@@ -322,7 +325,15 @@ private $first_page;
             'tmssg_general', 
             'tmssg_general_tab' 
         );
-
+        //Mandatory accept
+        add_settings_field( 
+            'mandatory_accept',
+            __('Mandatory for the user to accept the conditions to stop showing the message ', 
+            'track-message'), 
+            array( $this, 'mandatoryAcceptCallback' ), 
+            'tmssg_general', 
+            'tmssg_general_tab' 
+        );
         //First Page options
         add_settings_field( 
             'first_page',
@@ -510,7 +521,8 @@ private $first_page;
             'scroll_distance'				=> 250,
             'first_page'					=>	0,
             'message_time'					=>	15,
-            'cookie_time'					=>	12
+            'cookie_time'					=>	12,
+            'mandatory_accept'              =>  0
         );
         return $defaults;
     }
@@ -543,6 +555,19 @@ private $first_page;
         $html .= ('</select>');
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
         echo $html;      
+    }
+    public function mandatoryAcceptCallback() {
+        $text = __('If you check this option, the message will continue to appear while the visitor navigates on the site and at the next visit / reload of the page by the visitor, until the visitor clicks on the button or the X', 'track-message');
+        $class = ('description');
+        $type = ('checkbox');
+        $value = ('1');
+        $checked =  checked( ! empty ( $this->general_options['mandatory_accept'] ), 1, false );
+        $name = ('tmssg_general_options[mandatory_accept]');      
+        $html = sprintf('<input type="%s" name="%s" %s value="%s">
+        ',esc_attr($type), esc_attr($name), esc_attr($checked), esc_attr($value));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+        echo $html;
+
     }
     public function firstPageCallback() {
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
