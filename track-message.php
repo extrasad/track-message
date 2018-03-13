@@ -22,22 +22,23 @@ if ( ! function_exists( 'add_action' ) ) {
 
 class TrackMessage{
 
-private $message;
-private $cookie_policy_link;
-private $cookie_policy_url;
-private $cookie_settings;
-private $message_settings;
-private $position_settings;
-private $open_view_settings;
-private $close_view_settings;
-private $close_settings;
-private $general_options;
-private $styles_options;
-private $content_options;
-private $first_page;
-private $mandatory_accept;
-private $policy_link;
-private $policy_page;
+    private $message;
+    private $cookie_policy_link;
+    private $cookie_policy_url;
+    private $cookie_settings;
+    private $message_settings;
+    private $position_settings;
+    private $open_view_settings;
+    private $close_view_settings;
+    private $close_settings;
+    private $general_options;
+    private $styles_options;
+    private $content_options;
+    private $first_page;
+    private $mandatory_accept;
+    private $policy_link;
+    private $policy_page;
+    private $policy_tab_selector_settings;
 
 
 
@@ -56,6 +57,10 @@ private $policy_page;
         $this->policy_link = (isset($this->content_options['select_policy_link'])) ? $this->content_options['select_policy_link'] : 0;
         $this->policy_page = (isset($this->content_options['policy_page'])) ? $this->content_options['policy_page'] : 'None';
 
+         $this->policy_tab_selector_settings = array(
+            '_blank'    => __('New Tab', 'track-message'),
+            '_self'     => __('Same tab', 'track-message')
+        );
 
         $this->cookie_settings=array(
                         1   =>      __('1 Month','track-message'),
@@ -164,6 +169,8 @@ private $policy_page;
             'openView' => $this->styles_options['open_view'],
             'closeView' => $this->styles_options['close_view'],
             'mssgPosition' => $this->styles_options['positions'],
+            'tabSelector' => $this->content_options['policy_tab_selector'],
+            'policyLink' => $this->policy_link,
             'mandatoryAccept'=> $this->mandatory_accept
         );               
         
@@ -405,7 +412,17 @@ private $policy_page;
             __('Specify the url of your Cookie Policy Page starting with hhtp:', 'track-message'), 
             array( $this, 'policyUrlFieldCallback' ), 
             'tmssg_content', 'tmssg_content_tab' 
-        );            
+        );
+
+        // Select Tabs
+
+        add_settings_field( 
+            'policy_tab_selector',
+            __('Tab Selector', 'track-message'), 
+            array( $this, 'policyTabCallback' ), 
+            'tmssg_content', 'tmssg_content_tab' 
+        );
+
 
         $options = get_option ('tmssg_content_options');
             if ( false === $options ) {
@@ -538,8 +555,9 @@ private $policy_page;
         $defaults = array (
             'message_field'				=>	__('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message'),
             'select_policy_link'            =>  0,
-            'policy_link_field'             =>  'Cookie Policy',
-            'policy_page'                   =>  'None',
+            'policy_link_field'             =>  __('Cookie Policy', 'track-message'),
+            'policy_page'                   =>  __('None, track-message'),
+            'policy_tab_selector'           =>  '_blank',
             'policy_url'                    =>  'http://www.allaboutcookies.org/'
         );
         return $defaults;
@@ -690,6 +708,19 @@ private $policy_page;
         }
     }
 
+    public function policyTabCallback(){
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+        $html = sprintf('<select name="%s">', esc_attr('tmssg_content_options[policy_tab_selector]'));
+        foreach($this->policy_tab_selector_settings as $key => $value)
+        {
+            $html .= sprintf('<option value="%s"'.selected(esc_attr($this->content_options['policy_tab_selector']), esc_attr($key), false).'>%s</option>', esc_attr($key), esc_html($value));
+        }
+        $html .= ('</select>');
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+        echo $html;    
+    }
+
     public function mssgTimeCallback() {
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
@@ -811,16 +842,17 @@ private $policy_page;
         $id_button = ('TrackMessageCookieNotification_Id--close-5644');
         $class_button = ('TrackMessageCookieNotification__inline--btn');
         $id = ('TrackMessageCookieNotification_Id--3455');
+        $id_url = ('TrackMessageCookieNotification__url-Id--2443');
         $ready_to_js = ('display: none;');
         
         $accept = esc_html__('Accept', 'track-message');
         $html = sprintf('<div style="%s %s %s" id="%s">', esc_attr($color_applied), esc_attr($background_color_applied), esc_attr($ready_to_js), esc_attr($id));
         if ($this->policy_link == 1 && $this->policy_page == 'None' ) {
             $html.= sprintf('<p>%s</p>', esc_html__($this->message,'track-message'));
-            $html.= sprintf('<a href="%s" target="_blank">%s</a>',esc_url($this->cookie_policy_url),esc_html__($this->cookie_policy_link));
+            $html.= sprintf('<a id="%s" href="%s">%s</a>', esc_attr($id_url),esc_url($this->cookie_policy_url),esc_html__($this->cookie_policy_link));
         } else if ( $this->policy_link == 1 && $this->policy_page !== 'None'){
             $html.= sprintf('<p>%s</p>', esc_html__($this->message,'track-message'));
-            $html.= sprintf('<a href="%s" target="_blank">%s</a>',esc_url(get_the_permalink($this->policy_page)),esc_html__($this->cookie_policy_link));
+            $html.= sprintf('<a id="%s" href="%s">%s</a>',esc_attr($id_url),esc_url(get_the_permalink($this->policy_page)),esc_html__($this->cookie_policy_link));
         } else {
             $html.= sprintf('<p>%s</p>', esc_html__($this->message,'track-message'));
         }
