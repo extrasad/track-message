@@ -1,6 +1,14 @@
 document.addEventListener("DOMContentLoaded", function(event) { 
   const element = document.getElementById("TrackMessageCookieNotification_Id--3455");
   const close = document.getElementById("TrackMessageCookieNotification_Id--close-5644");
+  var url;
+  
+  const targetSelector= function(){
+    if ( phpValues.policyLink == 1 ){
+      url = document.getElementById('TrackMessageCookieNotification__url-Id--2443');
+      policyTabSelector();
+    }
+  }
 
   // Gives the necessary styles so the message looks elegant
 
@@ -12,6 +20,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   const rmClass = function(){
     element.style.removeProperty('display');
+  }
+
+  const policyTabSelector = function(){
+    switch ( phpValues.tabSelector ) {
+      case '_self':
+        url.setAttribute('target','_self')
+        break
+      default:
+        url.setAttribute('target','_blank')
+    }
   }
 
   // Selects the message Position
@@ -148,6 +166,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     initClasses();
     trackMssgPosition();
     openTrackMssg();
+    targetSelector();
   }
   const loadSettings = function(){
     closeSettings();
