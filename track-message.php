@@ -724,7 +724,7 @@ private $policy_link;
     public function colorInput(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class_paragraph = ('description');
-        $color = ( $this->styles_options['color'] != "" ) ? sanitize_text_field($this->styles_options['color']) : '#000000';
+        $color = ( isset($this->styles_options['color']) && $this->styles_options['color'] != "" ) ? sanitize_text_field($this->styles_options['color']) : '#000000';
         $class = ('TrackMessageNotification__content--edit-color');
         $name = ('tmssg_styles_options[color]');     
         $html = sprintf('<input class="%s" name="%s" type="%s" value="'. esc_html($color) .'" />', esc_attr($class), esc_attr($name), esc_attr('text'));
@@ -736,7 +736,7 @@ private $policy_link;
     public function backgroundColorInput(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class_paragraph = ('description');
-        $color = ( $this->styles_options['background_color'] != "" ) ? sanitize_text_field( $this->styles_options['background_color'] ) : '#ffffff';
+        $color = ( isset($this->styles_options['background_color']) && $this->styles_options['background_color'] != "" ) ? sanitize_text_field( $this->styles_options['background_color'] ) : '#ffffff';
         $class = ('TrackMessageNotification__content--edit-color');
         $name = ('tmssg_styles_options[background_color]');
         $type = ('text');  
@@ -749,7 +749,7 @@ private $policy_link;
     public function btnColorInput(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class_paragraph = ('description');
-        $color = ( $this->styles_options['btn_color'] != "" ) ? sanitize_text_field( $this->styles_options['btn_color'] ) : '#000000';
+        $color = ( isset($this->styles_options['btn_color']) && $this->styles_options['btn_color'] != "" ) ? sanitize_text_field( $this->styles_options['btn_color'] ) : '#000000';
         $class = ('TrackMessageNotification__content--edit-color');
         $name = ('tmssg_styles_options[btn_color]');
         $type = ('text');
@@ -762,7 +762,7 @@ private $policy_link;
     public function btnBackgroundColorInput(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class_paragraph = ('description');
-        $color = ( $this->styles_options['background_btn_color'] != "" ) ? sanitize_text_field( $this->styles_options['background_btn_color'] ) : '#ffffff';
+        $color = ( isset($this->styles_options['background_btn_color']) && $this->styles_options['background_btn_color'] != "" ) ? sanitize_text_field( $this->styles_options['background_btn_color'] ) : '#ffffff';
         $class = ('TrackMessageNotification__content--edit-color');
         $name = ('tmssg_styles_options[background_btn_color]');
         $type = ('text');
