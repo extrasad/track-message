@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // Selects the message Position
 
   const trackMssgPosition = function(){
-    switch (positionSettings.mssgPosition) { 
+    switch (phpValues.mssgPosition) { 
       case 'position_top': 
         element.classList.add('TrackMessageNotification__content--top') 
         break 
@@ -43,43 +43,43 @@ document.addEventListener("DOMContentLoaded", function(event) {
     
   const openTrackMssg = function(){
     switch (true) { 
-      case (openViewSettings.openView === 'fade'): 
+      case (phpValues.openView === 'fade'): 
         element.classList.add('TrackMessageNotification__content_fade--opennotification') 
         break 
-      case (openViewSettings.openView === 'fade-slide' && positionSettings.mssgPosition == 'position_top' ): 
+      case (phpValues.openView === 'fade-slide' && phpValues.mssgPosition == 'position_top' ): 
         element.classList.add('TrackMessageNotification__content_fade-slide--opennotification-top')
         break 
-      case (openViewSettings.openView === 'fade-slide' && positionSettings.mssgPosition == 'position_block_top_right'): 
+      case (phpValues.openView === 'fade-slide' && phpValues.mssgPosition == 'position_block_top_right'): 
         element.classList.add('TrackMessageNotification__content_fade-slide--opennotification-top')
         break 
-      case (openViewSettings.openView === 'fade-slide' && positionSettings.mssgPosition == 'position_block_top_left'): 
+      case (phpValues.openView === 'fade-slide' && phpValues.mssgPosition == 'position_block_top_left'): 
         element.classList.add('TrackMessageNotification__content_fade-slide--opennotification-top')
         break 
-      case (openViewSettings.openView === 'fade-slide' && positionSettings.mssgPosition == 'position_bottom'): 
+      case (phpValues.openView === 'fade-slide' && phpValues.mssgPosition == 'position_bottom'): 
         element.classList.add('TrackMessageNotification__content_fade-slide--opennotification-bottom')
         break
-      case (openViewSettings.openView === 'fade-slide' && positionSettings.mssgPosition == 'position_block_bottom_left'): 
+      case (phpValues.openView === 'fade-slide' && phpValues.mssgPosition == 'position_block_bottom_left'): 
         element.classList.add('TrackMessageNotification__content_fade-slide--opennotification-bottom')
         break
-      case (openViewSettings.openView === 'fade-slide' && positionSettings.mssgPosition == 'position_block_bottom_right'): 
+      case (phpValues.openView === 'fade-slide' && phpValues.mssgPosition == 'position_block_bottom_right'): 
         element.classList.add('TrackMessageNotification__content_fade-slide--opennotification-bottom')
         break 
-      case (openViewSettings.openView === 'slide' && positionSettings.mssgPosition == 'position_top'): 
+      case (phpValues.openView === 'slide' && phpValues.mssgPosition == 'position_top'): 
         element.classList.add('TrackMessageNotification__content_slide--opennotification-top')
         break 
-      case (openViewSettings.openView === 'slide' && positionSettings.mssgPosition == 'position_block_top_right'): 
+      case (phpValues.openView === 'slide' && phpValues.mssgPosition == 'position_block_top_right'): 
         element.classList.add('TrackMessageNotification__content_slide--opennotification-top')
         break 
-      case (openViewSettings.openView === 'slide' && positionSettings.mssgPosition == 'position_block_top_left'): 
+      case (phpValues.openView === 'slide' && phpValues.mssgPosition == 'position_block_top_left'): 
         element.classList.add('TrackMessageNotification__content_slide--opennotification-top')
         break 
-      case (openViewSettings.openView === 'slide' && positionSettings.mssgPosition == 'position_bottom'): 
+      case (phpValues.openView === 'slide' && phpValues.mssgPosition == 'position_bottom'): 
         element.classList.add('TrackMessageNotification__content_slide--opennotification-bottom')
         break
-      case (openViewSettings.openView === 'slide' && positionSettings.mssgPosition == 'position_block_bottom_left'): 
+      case (phpValues.openView === 'slide' && phpValues.mssgPosition == 'position_block_bottom_left'): 
         element.classList.add('TrackMessageNotification__content_slide--opennotification-bottom')
         break
-      case (openViewSettings.openView === 'slide' && positionSettings.mssgPosition == 'position_block_bottom_right'): 
+      case (phpValues.openView === 'slide' && phpValues.mssgPosition == 'position_block_bottom_right'): 
         element.classList.add('TrackMessageNotification__content_slide--opennotification-bottom')
         break 
       default: 
@@ -98,43 +98,43 @@ document.addEventListener("DOMContentLoaded", function(event) {
       element.classList.remove(openClass);
     }
     switch (true) { 
-      case (closeViewSettings.closeView === 'fade'): 
+      case (phpValues.closeView === 'fade'): 
         element.classList.add('TrackMessageNotification__content_fade--closenotification')
         break 
-      case (closeViewSettings.closeView === 'fade-slide' && positionSettings.mssgPosition == 'position_top' ): 
+      case (phpValues.closeView === 'fade-slide' && phpValues.mssgPosition == 'position_top' ): 
         element.classList.add('TrackMessageNotification__content_fade-slide--closenotification-top')
         break 
-      case (closeViewSettings.closeView === 'fade-slide' && positionSettings.mssgPosition == 'position_block_top_right'): 
+      case (phpValues.closeView === 'fade-slide' && phpValues.mssgPosition == 'position_block_top_right'): 
         element.classList.add('TrackMessageNotification__content_fade-slide--closenotification-top')
         break 
-      case (closeViewSettings.closeView === 'fade-slide' && positionSettings.mssgPosition == 'position_block_top_left'): 
+      case (phpValues.closeView === 'fade-slide' && phpValues.mssgPosition == 'position_block_top_left'): 
         element.classList.add('TrackMessageNotification__content_fade-slide--closenotification-top')
         break 
-      case (closeViewSettings.closeView === 'fade-slide' && positionSettings.mssgPosition == 'position_bottom'): 
+      case (phpValues.closeView === 'fade-slide' && phpValues.mssgPosition == 'position_bottom'): 
         element.classList.add('TrackMessageNotification__content_fade-slide--closenotification-bottom')
         break
-      case (closeViewSettings.closeView === 'fade-slide' && positionSettings.mssgPosition == 'position_block_bottom_left'): 
+      case (phpValues.closeView === 'fade-slide' && phpValues.mssgPosition == 'position_block_bottom_left'): 
         element.classList.add('TrackMessageNotification__content_fade-slide--closenotification-bottom')
         break
-      case (closeViewSettings.closeView === 'fade-slide' && positionSettings.mssgPosition == 'position_block_bottom_right'): 
+      case (phpValues.closeView === 'fade-slide' && phpValues.mssgPosition == 'position_block_bottom_right'): 
         element.classList.add('TrackMessageNotification__content_fade-slide--closenotification-bottom')
         break 
-      case (closeViewSettings.closeView === 'slide' && positionSettings.mssgPosition == 'position_top'): 
+      case (phpValues.closeView === 'slide' && phpValues.mssgPosition == 'position_top'): 
         element.classList.add('TrackMessageNotification__content_slide--closenotification-top')
         break 
-      case (closeViewSettings.closeView === 'slide' && positionSettings.mssgPosition == 'position_block_top_right'): 
+      case (phpValues.closeView === 'slide' && phpValues.mssgPosition == 'position_block_top_right'): 
         element.classList.add('TrackMessageNotification__content_slide--closenotification-top')
         break 
-      case (closeViewSettings.closeView === 'slide' && positionSettings.mssgPosition == 'position_block_top_left'): 
+      case (phpValues.closeView === 'slide' && phpValues.mssgPosition == 'position_block_top_left'): 
         element.classList.add('TrackMessageNotification__content_slide--closenotification-top')
         break 
-      case (closeViewSettings.closeView === 'slide' && positionSettings.mssgPosition == 'position_bottom'): 
+      case (phpValues.closeView === 'slide' && phpValues.mssgPosition == 'position_bottom'): 
         element.classList.add('TrackMessageNotification__content_slide--closenotification-bottom')
         break
-      case (closeViewSettings.closeView === 'slide' && positionSettings.mssgPosition == 'position_block_bottom_left'): 
+      case (phpValues.closeView === 'slide' && phpValues.mssgPosition == 'position_block_bottom_left'): 
         element.classList.add('TrackMessageNotification__content_slide--closenotification-bottom')
         break
-      case (closeViewSettings.closeView === 'slide' && positionSettings.mssgPosition == 'position_block_bottom_right'): 
+      case (phpValues.closeView === 'slide' && phpValues.mssgPosition == 'position_block_bottom_right'): 
         element.classList.add('TrackMessageNotification__content_slide--closenotification-bottom')
         break 
       default: 
@@ -148,6 +148,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     initClasses();
     trackMssgPosition();
     openTrackMssg();
+  }
+  const loadSettings = function(){
+    closeSettings();
+    firstPageSettings();
   }
 
 
@@ -178,16 +182,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // Time duration of the message in the page.
   var closeSettings = function(){
     var closeOption = phpValues.close;
+    var mandatoryAccept = parseInt(phpValues.mandatoryAccept);
       switch(closeOption){
         case('scroll'):
           var settingScroll = function(){
             var scrollDistance = parseInt(phpValues.scrollDistance);
               scrollTop = window.pageYOffset
-                if(scrollTop >= scrollDistance){
-                  closeTrackMssg()
+                if(scrollTop >= scrollDistance && mandatoryAccept == 0){
                   setCookie()
+                  closeTrackMssg()
                   window.removeEventListener('scroll', settingScroll, false);
-                } 
+                }
             }
           window.addEventListener('scroll', settingScroll, false);
         break;
@@ -197,17 +202,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
         break;
         case('time'):
           var messageTime = parseInt(phpValues.message);
+          if(mandatoryAccept == 0){
             var setTime = setTimeout(function(messageTime) {
-              closeTrackMssg()
               setCookie()
+              closeTrackMssg()
             }, messageTime*1000);
+          }
         break;      
-      }
+    }
   };
-
+  var firstPageSettings = function(){
+    var firstPage = parseInt(phpValues.firstPage);
+      if (firstPage === 1){
+        setCookie()
+      }
+  }
   
   loadAssets();
-  closeSettings();
+  loadSettings();
   close.addEventListener('click', closeTrackMssg, false);
   close.addEventListener('click', setCookie, false);
 
