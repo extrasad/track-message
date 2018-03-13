@@ -58,7 +58,7 @@ private $mandatory_accept;
         $this->styles_options = get_option('tmssg_styles_options');
         $this->message = ( $this->content_options['message_field'] != "" ) ? sanitize_text_field($this->content_options['message_field']) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
         $this->cookie_policy_link_options = get_option('policy_link_field');
-        $this->cookie_policy_link = ( $this->cookie_policy_link_options != "" ) ? sanitize_text_field($this->cookie_policy_link_options) : __('Cookie Policy', 'track-message');   
+        $this->cookie_policy_link = ( $this->cookie_policy_link_options != "" ) ? sanitize_text_field($this->cookie_policy_link_options) : __('Cookie Policy', 'track-message');     
         $this->cookie_policy_url_options = get_option('policy_url');
         $this->cookie_policy_url = ( $this->cookie_policy_url_options != "" ) ? sanitize_text_field($this->cookie_policy_url_options) : '//example.com/privacy-policy/';
         $this->first_page = (isset($this->general_options['first_page'])) ? $this->general_options['first_page'] : 0;
@@ -404,6 +404,16 @@ private $mandatory_accept;
             'tmssg_content', 'tmssg_content_tab' 
         );
         
+        // Select Policy Page 
+        
+        add_settings_field ( 
+            'policy_page', 
+            __( 'Cookie Policy Info Page', 'uk-cookie-consent' ), 
+            array ( $this, 'policyPageCallback' ),
+            'tmssg_content', 
+            'tmssg_content_tab'
+        );
+        
         // Cookie Policy Page - URL
         
         add_settings_field( 
@@ -697,6 +707,23 @@ private $mandatory_accept;
         echo $html;
     }
 
+    public function policyPageCallback(){
+        $pages = get_pages();
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+
+        if ($pages){
+            $html = sprintf('<select name="%s">', esc_attr('tmssg_content_options[policy_page]'));
+            $html .= sprintf('<option>None</option>');
+            foreach ( $pages as $page ) { 
+                $html.= sprintf('<option value="%d"'.selected( esc_attr($this->content_options['policy_page']), $page->ID, false ).'>%s</option>',$page->ID,$page->post_title);
+            }
+            $html .= ('</select>');
+            $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+            echo $html;  
+        }
+    }
+
     public function mssgTimeCallback() {
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
@@ -845,7 +872,6 @@ private $mandatory_accept;
         $background_color = get_option('background_color_options');
         $btn_color = get_option('btn_color_options');
         $btn_background_color = get_option('background_btn_color_options');
-        $policy_link = get_option('select_policy_link');
         $btn_color_applied = ('color :'.$btn_color['btn_color'].';');
         $btn_background_color_applied = ('background-color :'.$btn_background_color['background_btn_color'].';');
         $background_color_applied = ('background-color :'.$background_color['background_color'].';');
@@ -857,9 +883,12 @@ private $mandatory_accept;
         
         $accept = esc_html__('Accept', 'track-message');
         $html = sprintf('<div style="%s %s %s" id="%s">', esc_attr($color_applied), esc_attr($background_color_applied), esc_attr($ready_to_js), esc_attr($id));
-        if ( is_array( $this->content_options ) && $this->content_options['select_policy_link'] == 1 ) {
+        if ( is_array( $this->content_options ) && isset($this->content_options['select_policy_link']) && $this->content_options['select_policy_link'] == 1 && $this->content_options['policy_page'] == 'None') {
             $html.= sprintf('<p>%s</p>', esc_html__($this->message,'track-message'));
             $html.= sprintf('<a href="%s">%s</a>',esc_url($this->cookie_policy_url),esc_html__($this->cookie_policy_link_options));
+        } else if ( is_array( $this->content_options ) && isset($this->content_options['select_policy_link']) && $this->content_options['select_policy_link'] == 1 && $this->content_options['policy_page'] !== 'None'){
+            $html.= sprintf('<p>%s</p>', esc_html__($this->message,'track-message'));
+            $html.= sprintf('<a href="%s">%s</a>',esc_url(get_the_permalink($this->content_options['policy_page'])),esc_html__($this->cookie_policy_link_options));
         } else {
             $html.= sprintf('<p>%s</p>', esc_html__($this->message,'track-message'));
         }
