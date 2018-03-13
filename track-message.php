@@ -24,28 +24,19 @@ class TrackMessage{
 
 private $message;
 private $cookie_policy_link;
-private $cookie_policy_link_options;
 private $cookie_policy_url;
-private $cookie_policy_url_options;
 private $cookie_settings;
 private $message_settings;
-private $cookie_options;
-private $message_options;
-private $position_options;
 private $position_settings;
-private $open_view_options;
 private $open_view_settings;
-private $close_view_options;
 private $close_view_settings;
 private $close_settings;
-private $close_options;
-private $scroll_options;
-private $first_page_options;
 private $general_options;
 private $styles_options;
 private $content_options;
 private $first_page;
 private $mandatory_accept;
+private $policy_link;
 
 
 
@@ -57,12 +48,11 @@ private $mandatory_accept;
         $this->general_options = get_option('tmssg_general_options');
         $this->styles_options = get_option('tmssg_styles_options');
         $this->message = ( $this->content_options['message_field'] != "" ) ? sanitize_text_field($this->content_options['message_field']) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
-        $this->cookie_policy_link_options = get_option('policy_link_field');
-        $this->cookie_policy_link = ( $this->cookie_policy_link_options != "" ) ? sanitize_text_field($this->cookie_policy_link_options) : __('Cookie Policy', 'track-message');   
-        $this->cookie_policy_url_options = get_option('policy_url');
-        $this->cookie_policy_url = ( $this->cookie_policy_url_options != "" ) ? sanitize_text_field($this->cookie_policy_url_options) : '//example.com/privacy-policy/';
+        $this->cookie_policy_link = ($this->content_options['policy_link_field'] != "" ) ? sanitize_text_field($this->content_options['policy_link_field']) : __('Cookie Policy', 'track-message');   
+        $this->cookie_policy_url = ( $this->content_options['policy_url'] != "" ) ? sanitize_text_field($this->content_options['policy_url']) : 'http://www.allaboutcookies.org/';
         $this->first_page = (isset($this->general_options['first_page'])) ? $this->general_options['first_page'] : 0;
         $this->mandatory_accept = (isset($this->general_options['mandatory_accept'])) ? $this->general_options['mandatory_accept'] : 0;
+        $this->policy_link = (isset($this->content_options['select_policy_link'])) ? $this->content_options['select_policy_link'] : 0;
 
 
         $this->cookie_settings=array(
@@ -115,8 +105,6 @@ private $mandatory_accept;
 
         );
 
-        $this->position_options = get_option('position_options');
-
         $this->position_settings = array(
         'position_top'                      => __('Top', 'track-message'),
         'position_block_top_right'          => __('Block Top Right', 'track-message'),
@@ -126,18 +114,12 @@ private $mandatory_accept;
         'position_block_bottom_left'        => __('Block Bottom Left', 'track-message')
         );
 
-        
-
-        $this->open_view_options = get_option('open_view_options');
-
         $this->open_view_settings = array(
 			'none'	 			=> __( 'None', 'track-message' ),
 			'fade'	 			=> __( 'Fade', 'track-message' ),
             'slide'	 			=> __( 'Slide', 'track-message' ),
             'fade-slide'	 	=> __( 'Fade & Slide', 'track-message' )
-        );
-        
-        $this->close_view_options = get_option('close_view_options');
+        );       
 
         $this->close_view_settings = array(
 			'none'	 			=> __( 'None', 'track-message' ),
@@ -477,11 +459,6 @@ private $mandatory_accept;
      
 
         //Color Picker - Design
-        register_setting(
-            'tmssg_styles',
-            'color_options',
-            array( $this, 'validateOptions' )
-        );
           
         add_settings_section(
             'wp-color-picker-section',
@@ -498,11 +475,6 @@ private $mandatory_accept;
             'tmssg_styles_tab'
         );
 
-        register_setting(
-            'tmssg_styles',
-            'background_color_options',
-            array( $this, 'validateBackgroundOptions' )
-        );
           
         add_settings_field(
             'background_color',
@@ -512,12 +484,6 @@ private $mandatory_accept;
             'tmssg_styles_tab'
         );
         //Button color settings
-
-        register_setting(
-            'tmssg_styles',
-            'btn_color_options',
-            array( $this, 'validateBtnColorOptions' )
-        );
           
         add_settings_field(
             'btn_color',
@@ -525,12 +491,6 @@ private $mandatory_accept;
             array( $this, 'btnColorInput' ),
             'tmssg_styles', 
             'tmssg_styles_tab'
-        );
-
-        register_setting(
-            'tmssg_styles',
-            'background_btn_color_options',
-            array( $this, 'validateBtnBackgroundOptions' )
         );
           
         add_settings_field(
@@ -556,22 +516,30 @@ private $mandatory_accept;
             'first_page'					=>	0,
             'message_time'					=>	15,
             'cookie_time'					=>	12,
-            'mandatory_accept'              =>  0
+            'mandatory_accept'              =>	0
+
         );
         return $defaults;
     }
 
     public function contentDefaultSettings() {
         $defaults = array (
-            'message_field'				=>	__('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message')
+            'message_field'				=>	__('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message'),
+            'select_policy_link'            =>  0,
+            'policy_link_field'             =>  'Cookie Policy',
+            'policy_url'                    =>  'http://www.allaboutcookies.org/'
         );
         return $defaults;
     }
     public function stylesDefaultSettings() {
         $defaults = array (
-            'positions'				=>	'position_bottom',
+            'positions'				=> 'position_bottom',
             'close_view'			=> 'none',
-            'open_view'				=>	'none'
+            'open_view'				=> 'none',
+            'color'                 => '#000000',
+            'background_color'      => '#ffffff',
+            'btn_color'             => '#000000',
+            'background_btn_color'  => '#ffffff'
         );
         return $defaults;
     }
@@ -682,18 +650,13 @@ private $mandatory_accept;
     public function selectPolicyLinkFieldCallback(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class = ('description');
-        $style = ('margin: 5px;');
-
-        if ( is_array( $this->content_options ) && isset($this->content_options['select_policy_link']) && $this->content_options['select_policy_link'] == 1) {
-            $checked = 'checked="checked"';
-            $html = sprintf('<label><input type="checkbox" id="%s" name="%s" value="1" style="%s" %s> Link to Cookie Policy Page</label>', esc_attr('select_policy_link'),esc_attr('tmssg_content_options[select_policy_link]'),  esc_attr($style), esc_attr($checked));
-        } else {
-            $unchecked = 'unchecked="unchecked"';
-            $html = sprintf('<label><input type="checkbox" id="%s" name="%s" value="1" style="%s" %s> Link to Cookie Policy Page</label>', esc_attr('select_policy_link'),esc_attr('tmssg_content_options[select_policy_link]'),  esc_attr($style), esc_attr($unchecked));
-        }
-
+        $type = ('checkbox');
+        $value = ('1');
+        $checked =  checked( ! empty ( $this->content_options['select_policy_link'] ), 1, false );
+        $name = ('tmssg_content_options[select_policy_link]');      
+        $html = sprintf('<input type="%s" name="%s" %s value="%s">
+        ',esc_attr($type), esc_attr($name), esc_attr($checked), esc_attr($value));
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
-        
         echo $html;
     }
 
@@ -761,70 +724,47 @@ private $mandatory_accept;
     public function colorInput(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class_paragraph = ('description');
-        $options = get_option( 'color_options' );
-        $color = ( $options['color'] != "" ) ? sanitize_text_field( $options['color'] ) : '#000000';
+        $color = ( $this->styles_options['color'] != "" ) ? sanitize_text_field($this->styles_options['color']) : '#000000';
         $class = ('TrackMessageNotification__content--edit-color');
-        
-        $html = sprintf('<input class="%s" name="%s" type="%s" value="'. esc_html($color) .'" />', esc_attr($class), esc_attr('color_options[color]'), esc_attr('text'));
+        $name = ('tmssg_styles_options[color]');     
+        $html = sprintf('<input class="%s" name="%s" type="%s" value="'. esc_html($color) .'" />', esc_attr($class), esc_attr($name), esc_attr('text'));
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class_paragraph), esc_html($text));
         echo $html;
     }
 
-    public function validateOptions( $input ){
-        $valid = array();
-        $valid['color'] = sanitize_text_field( $input['color'] );
-        
-        return $valid;
-    }
 
     public function backgroundColorInput(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class_paragraph = ('description');
-        $options = get_option( 'background_color_options' );
-        $color = ( $options['background_color'] != "" ) ? sanitize_text_field( $options['background_color'] ) : '#ffffff';
+        $color = ( $this->styles_options['background_color'] != "" ) ? sanitize_text_field( $this->styles_options['background_color'] ) : '#ffffff';
         $class = ('TrackMessageNotification__content--edit-color');
-        $name = ('background_color_options[background_color]');
-        $type = ('text');
-        
+        $name = ('tmssg_styles_options[background_color]');
+        $type = ('text');  
         $html = sprintf('<input class="%s" name="%s" type="%s" value="'. esc_attr($color) .'" />', esc_attr($class), esc_attr($name), esc_attr($type));
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class_paragraph), esc_html($text));
         echo $html;
     }
 
-    public function validateBackgroundOptions( $input ){
-        $valid = array();
-        $valid['background_color'] = sanitize_text_field( $input['background_color'] );
-        
-        return $valid;
-    }
      // Button Color settings
     public function btnColorInput(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class_paragraph = ('description');
-        $options = get_option( 'btn_color_options' );
-        $color = ( $options['btn_color'] != "" ) ? sanitize_text_field( $options['btn_color'] ) : '#000000';
+        $color = ( $this->styles_options['btn_color'] != "" ) ? sanitize_text_field( $this->styles_options['btn_color'] ) : '#000000';
         $class = ('TrackMessageNotification__content--edit-color');
-        $name = ('btn_color_options[btn_color]');
+        $name = ('tmssg_styles_options[btn_color]');
         $type = ('text');
         $html = sprintf('<input class="%s" name="%s" type="%s" value="'. esc_attr($color) .'" />', esc_attr($class), esc_attr($name), esc_attr($type));
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class_paragraph), esc_html($text));
         echo $html;
     }
 
-    public function validateBtnColorOptions( $input ){
-        $valid = array();
-        $valid['btn_color'] = sanitize_text_field( $input['btn_color'] );
-        
-        return $valid;
-    }
 
     public function btnBackgroundColorInput(){
         $text = __('Lorem ipsum the fuck out of you', 'track-message');
         $class_paragraph = ('description');
-        $options = get_option( 'background_btn_color_options' );
-        $color = ( $options['background_btn_color'] != "" ) ? sanitize_text_field( $options['background_btn_color'] ) : '#ffffff';
+        $color = ( $this->styles_options['background_btn_color'] != "" ) ? sanitize_text_field( $this->styles_options['background_btn_color'] ) : '#ffffff';
         $class = ('TrackMessageNotification__content--edit-color');
-        $name = ('background_btn_color_options[background_btn_color]');
+        $name = ('tmssg_styles_options[background_btn_color]');
         $type = ('text');
         
         $html = sprintf('<input class="%s" name="%s" type="%s" value="'. esc_attr($color) .'" />', esc_attr($class), esc_attr($name), esc_attr($type));
@@ -832,24 +772,12 @@ private $mandatory_accept;
         echo $html;
     }
 
-    public function validateBtnBackgroundOptions( $input ){
-        $valid = array();
-        $valid['background_btn_color'] = sanitize_text_field( $input['background_btn_color'] );
-        
-        return $valid;
-    }
-
     // Show the message.
     public function tmssgShowMessage(){
-        $color = get_option('color_options');
-        $background_color = get_option('background_color_options');
-        $btn_color = get_option('btn_color_options');
-        $btn_background_color = get_option('background_btn_color_options');
-        $policy_link = get_option('select_policy_link');
-        $btn_color_applied = ('color :'.$btn_color['btn_color'].';');
-        $btn_background_color_applied = ('background-color :'.$btn_background_color['background_btn_color'].';');
-        $background_color_applied = ('background-color :'.$background_color['background_color'].';');
-        $color_applied = ('color :'.$color['color'].';');
+        $btn_color_applied = ('color :'.$this->styles_options['btn_color'].';');
+        $btn_background_color_applied = ('background-color :'.$this->styles_options['background_btn_color'].';');
+        $background_color_applied = ('background-color :'.$this->styles_options['background_color'].';');
+        $color_applied = ('color :'.$this->styles_options['color'].';');
         $id_button = ('TrackMessageCookieNotification_Id--close-5644');
         $class_button = ('TrackMessageCookieNotification__inline--btn');
         $id = ('TrackMessageCookieNotification_Id--3455');
@@ -857,9 +785,9 @@ private $mandatory_accept;
         
         $accept = esc_html__('Accept', 'track-message');
         $html = sprintf('<div style="%s %s %s" id="%s">', esc_attr($color_applied), esc_attr($background_color_applied), esc_attr($ready_to_js), esc_attr($id));
-        if ( is_array( $this->content_options ) && $this->content_options['select_policy_link'] == 1 ) {
+        if ($this->policy_link == 1 ) {
             $html.= sprintf('<p>%s</p>', esc_html__($this->message,'track-message'));
-            $html.= sprintf('<a href="%s">%s</a>',esc_url($this->cookie_policy_url),esc_html__($this->cookie_policy_link_options));
+            $html.= sprintf('<a href="%s">%s</a>',esc_url($this->cookie_policy_url),esc_html__($this->cookie_policy_link));
         } else {
             $html.= sprintf('<p>%s</p>', esc_html__($this->message,'track-message'));
         }
