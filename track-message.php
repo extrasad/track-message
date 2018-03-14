@@ -39,6 +39,8 @@ class TrackMessage{
     private $policy_link;
     private $policy_page;
     private $policy_tab_selector_settings;
+    private $message_header;
+    private $message_header_text;
 
 
 
@@ -50,12 +52,14 @@ class TrackMessage{
         $this->general_options = get_option('tmssg_general_options');
         $this->styles_options = get_option('tmssg_styles_options');
         $this->message = ( $this->content_options['message_field'] != "" ) ? sanitize_text_field($this->content_options['message_field']) : __('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message');
+        $this->message_header_text = ( $this->content_options['message_header_field'] != "" ) ? sanitize_text_field($this->content_options['message_header_field']) : __('Hello Visitor!');
         $this->cookie_policy_link = ($this->content_options['policy_link_field'] != "" ) ? sanitize_text_field($this->content_options['policy_link_field']) : __('Cookie Policy', 'track-message');   
         $this->cookie_policy_url = ( $this->content_options['policy_url'] != "" ) ? sanitize_text_field($this->content_options['policy_url']) : 'http://www.allaboutcookies.org/';
         $this->first_page = (isset($this->general_options['first_page'])) ? $this->general_options['first_page'] : 0;
         $this->mandatory_accept = (isset($this->general_options['mandatory_accept'])) ? $this->general_options['mandatory_accept'] : 0;
         $this->policy_link = (isset($this->content_options['select_policy_link'])) ? $this->content_options['select_policy_link'] : 0;
         $this->policy_page = (isset($this->content_options['policy_page'])) ? $this->content_options['policy_page'] : 'None';
+        $this->message_header = (isset($this->content_options['select_message_header'])) ? $this->content_options['select_message_header'] : 0;
 
          $this->policy_tab_selector_settings = array(
             '_blank'    => __('New Tab', 'track-message'),
@@ -171,7 +175,9 @@ class TrackMessage{
             'mssgPosition' => $this->styles_options['positions'],
             'tabSelector' => $this->content_options['policy_tab_selector'],
             'policyLink' => $this->policy_link,
-            'mandatoryAccept'=> $this->mandatory_accept
+            'mandatoryAccept'=> $this->mandatory_accept,
+            'mssgHeaderSelector' => $this->message_header,
+            'mssgHeaderText' => $this->message_header_text
         );               
         
         if (is_admin()){
@@ -377,6 +383,18 @@ class TrackMessage{
             array( $this, 'mssgFieldCallback' ), 
             'tmssg_content', 'tmssg_content_tab' 
         );
+        add_settings_field( 
+            'select_message_header',
+            __('Check if you want to show a header in your message', 'track-message'), 
+            array( $this, 'selectHeaderFieldCallback' ), 
+            'tmssg_content', 'tmssg_content_tab' 
+        );
+        add_settings_field( 
+            'message_header_field',
+            __('Write the header', 'track-message'), 
+            array( $this, 'mssgHeaderFieldCallback' ), 
+            'tmssg_content', 'tmssg_content_tab' 
+        );
         // CheckBox - Cookie Policy Link - Read More
         
         add_settings_field( 
@@ -564,7 +582,9 @@ class TrackMessage{
     public function contentDefaultSettings() {
         $defaults = array (
             'message_field'				=>	__('We use cookies in our site to add custom functions. Continuing browsing accepts our cookies policy', 'track-message'),
+            'message_header_field'      => __('Hello Visitor!'),
             'select_policy_link'            =>  0,
+            'select_message_header'         =>  0,
             'policy_link_field'             =>  __('Cookie Policy', 'track-message'),
             'policy_page'                   =>  __('None, track-message'),
             'policy_tab_selector'           =>  '_blank',
@@ -657,6 +677,30 @@ class TrackMessage{
         $style = ('width: 70%;');       
         $html = sprintf('<textarea name="%s" id="%s" style="%s"',esc_attr('tmssg_content_options[message_field]'), esc_attr('message_field'), esc_attr($style));
         $html.= sprintf('type="text">%s</textarea>', esc_html__($this->message, 'track-message'));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+
+        echo $html;
+    }
+
+    public function selectHeaderFieldCallback(){
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+        $type = ('checkbox');
+        $value = ('1');
+        $checked =  checked( ! empty ( $this->content_options['select_message_header'] ), 1, false );
+        $name = ('tmssg_content_options[select_message_header]');      
+        $html = sprintf('<input type="%s" name="%s" %s value="%s">
+        ',esc_attr($type), esc_attr($name), esc_attr($checked), esc_attr($value));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+        echo $html;
+    }
+
+    public function mssgHeaderFieldCallback(){
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+        $style = ('width: 25%;');       
+        $html = sprintf('<textarea name="%s" id="%s" style="%s"',esc_attr('tmssg_content_options[message_header_field]'), esc_attr('message_header_field'), esc_attr($style));
+        $html.= sprintf('type="text">%s</textarea>', esc_html__($this->message_header_text, 'track-message'));
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
 
         echo $html;
