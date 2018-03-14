@@ -203,15 +203,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
   //Setting cookie
   var setCookie = function(){
     var cookieName = 'UserFirstTime';
-    var cookieValue = '1';
+    var cookieValue = (phpValues.cookieVersion);
     var myDate = new Date();
-    var cookieTime = parseInt(phpValues.cookie);
+    var cookieTime = parseInt(phpValues.cookieTime);
     //Cookie duration
     myDate.setMonth(myDate.getMonth() + cookieTime);
-    //Check if cookie is setted to not reset the cookie.
+    //Getting cookie data
     var cookie= getCookie("UserFirstTime");
     //Checking cookie value
-      if (!cookie  == '1'){
+      if (cookie  != cookieValue){
         document.cookie = cookieName +"=" + cookieValue + ";expires=" + myDate 
         + ";path=/";
       }
