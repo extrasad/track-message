@@ -41,6 +41,7 @@ class TrackMessage{
     private $policy_tab_selector_settings;
     private $message_header;
     private $message_header_text;
+    private $cookie_value;
 
 
 
@@ -60,8 +61,9 @@ class TrackMessage{
         $this->policy_link = (isset($this->content_options['select_policy_link'])) ? $this->content_options['select_policy_link'] : 0;
         $this->policy_page = (isset($this->content_options['policy_page'])) ? $this->content_options['policy_page'] : 'None';
         $this->message_header = (isset($this->content_options['select_message_header'])) ? $this->content_options['select_message_header'] : 0;
-
-         $this->policy_tab_selector_settings = array(
+        $this->cookie_value = (isset($_COOKIE['UserFirstTime'])) ? $_COOKIE['UserFirstTime'] : 0;
+        
+        $this->policy_tab_selector_settings = array(
             '_blank'    => __('New Tab', 'track-message'),
             '_self'     => __('Same tab', 'track-message')
         );
@@ -147,7 +149,7 @@ class TrackMessage{
 
         add_filter( "plugin_action_links_$plugin", array($this, 'customSettingsLink' ));
 
-        if( !isset( $_COOKIE["UserFirstTime"])){
+        if( $this->cookie_value != $this->general_options['cookie_version']){
             add_action('wp_head', array( $this, 'tmssgShowMessage'));
         }
     }
@@ -165,7 +167,7 @@ class TrackMessage{
         $url_plugin_js  =   ($plugin_dir.'js/');
         $url_plugin_css  =   ($plugin_dir.'css/');
         $js_settings = array(
-            'cookie' => $this->general_options['cookie_time'],
+            'cookieTime' => $this->general_options['cookie_time'],
             'message' => $this->general_options['message_time'],
             'close' => $this->general_options['close_settings'],
             'scrollDistance' => $this->general_options['scroll_distance'],
@@ -177,7 +179,8 @@ class TrackMessage{
             'policyLink' => $this->policy_link,
             'mandatoryAccept'=> $this->mandatory_accept,
             'mssgHeaderSelector' => $this->message_header,
-            'mssgHeaderText' => $this->message_header_text
+            'mssgHeaderText' => $this->message_header_text,
+            'cookieVersion' => $this->general_options['cookie_version']
         );               
         
         if (is_admin()){
@@ -186,7 +189,7 @@ class TrackMessage{
             wp_enqueue_script( 'wp-color-picker' );
             wp_enqueue_script('tmssg_custom_js');    
         }    
-        if ( !isset($_COOKIE['UserFirstTime']) && (!is_admin())){
+        if (($this->cookie_value != $this->general_options['cookie_version']) && (!is_admin())){
             wp_register_script('tmssg_js', $url_plugin_js . 'track_message.js');
             wp_register_style( 'tmssg_css', $url_plugin_css . 'track_message.css');
             wp_enqueue_style('tmssg_css');
@@ -358,6 +361,16 @@ class TrackMessage{
             'tmssg_general', 
             'tmssg_general_tab' 
         );
+        //Cookie version
+        add_settings_field( 
+            'cookie_version',
+            __('Cookie Version', 
+            'track-message'), 
+            array( $this, 'cookieVersionCallback' ), 
+            'tmssg_general', 
+            'tmssg_general_tab' 
+        );
+
         $options = get_option ('tmssg_general_options');
         if ( false === $options ) {
             // Default array.
@@ -573,7 +586,8 @@ class TrackMessage{
             'first_page'					=>	0,
             'message_time'					=>	15,
             'cookie_time'					=>	12,
-            'mandatory_accept'              =>	0
+            'mandatory_accept'              =>	0,
+            'cookie_version'                => 1
 
         );
         return $defaults;
@@ -618,6 +632,18 @@ class TrackMessage{
         $html .= ('</select>');
         $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
         echo $html;      
+    }
+    public function cookieVersionCallback(){
+        $text = __('Lorem ipsum the fuck out of you', 'track-message');
+        $class = ('description');
+        $name = ('tmssg_general_options[cookie_version]');
+        $type = ('number');
+        $min = 1;
+        $value = ($this->general_options['cookie_version']);       
+        $html = sprintf('<input type="%s" min="%d" name="%s" value="%s">' , esc_attr($type), esc_attr($min), esc_attr($name), esc_attr($value));
+        $html .= sprintf('<p class="%s">%s<p>', esc_attr($class), esc_html($text));
+
+        echo $html;
     }
     public function mandatoryAcceptCallback() {
         $text = __('If you check this option, the message will continue to appear while the visitor navigates on the site and at the next visit / reload of the page by the visitor, until the visitor clicks on the button or the X', 'track-message');
